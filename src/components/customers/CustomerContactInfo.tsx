@@ -12,6 +12,7 @@ import { Customer } from "../../types/Customer";
 import { customerSchema } from "../../schemas/customer.schema";
 import { useAppSnackbar } from "../../providers/SnackBarProvider";
 import { FieldErrors, zodIssuesToFieldErrors } from "../../schemas/utils";
+import { updateCustomer } from "../../services/customerService";
 
 interface CustomerContactInfoProps {
     customer: Customer;
@@ -54,13 +55,19 @@ export function CustomerContactInfo({
         setIsEditing(false);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const result = customerSchema.safeParse(customer);
         if (!result.success) {
             setErrors(zodIssuesToFieldErrors(result.error.issues));
             show({ message: "Revisa los campos marcados." });
             return;
         }
+        const savedCustomer = await updateCustomer(customer);
+        if (!savedCustomer) {
+            show({ message: "No se pudo guardar el cliente." });
+            return;
+        }
+        setCustomer(savedCustomer);
         setErrors({});
         setIsEditing(false);
         show({ message: "Cambios guardados.", duration: 2000 });
