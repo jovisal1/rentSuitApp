@@ -1,13 +1,33 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useTheme, TextInput } from "react-native-paper";
-import { customers } from "../../../types/mocks/Customer.mock";
 import CustomerCardApp from "../../../components/customers/CustomerCardApp";
+import { getCustomers } from "../../../services/customerService";
+import { Customer } from "../../../types/Customer";
 
 
 export default function CustomersScreen() {
     const theme = useTheme();
     const [search, setSearch] = useState("");
+    const [customers, setCustomers] = useState<Customer[]>([]);
+
+    useFocusEffect(
+        useCallback(() => {
+            let isActive = true;
+            const loadCustomers = async () => {
+                const data = await getCustomers();
+                if (isActive) {
+                    setCustomers([...data]);
+                }
+            };
+
+            loadCustomers();
+            return () => {
+                isActive = false;
+            };
+        }, [])
+    );
 
     const filtered = useMemo(() => {
         const term = search.trim().toLowerCase();
@@ -16,9 +36,9 @@ export default function CustomersScreen() {
             (c) =>
                 c.name.toLowerCase().includes(term) ||
                 (c.email?.toLowerCase().includes(term) ?? false) ||
-                (c.phone?.toLowerCase().includes(term) ?? false),
+                (c.phone?.toLowerCase().includes(term) ?? false)
         );
-    }, [search]);
+    }, [customers, search]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
