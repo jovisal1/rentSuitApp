@@ -1,10 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { FlatList, StyleSheet, View } from "react-native";
-import { useTheme, TextInput } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import CustomerCardApp from "../../../components/customers/CustomerCardApp";
 import { getCustomers } from "../../../services/customerService";
 import { Customer } from "../../../types/Customer";
+import { SearchInputApp } from "../../../components/SearchInputApp";
 
 
 export default function CustomersScreen() {
@@ -55,26 +56,11 @@ export default function CustomersScreen() {
                 maxToRenderPerBatch={10}
                 ListHeaderComponent={
                     <View style={styles.searchWrapper}>
-                        <TextInput
-                            mode="flat"
-                            placeholder="Buscar clientes..."
+                        <SearchInputApp
                             value={search}
                             onChangeText={setSearch}
+                            placeholder="Buscar clientes..."
                             style={styles.searchInput}
-                            underlineColor="transparent"
-                            activeUnderlineColor="transparent"
-                            left={<TextInput.Icon icon="magnify" color="#A0A0A0" size={20} />}
-                            right={
-                                search.length > 0 ? (
-                                    <TextInput.Icon
-                                        icon="close-circle"
-                                        color="#A0A0A0"
-                                        size={20}
-                                        onPress={() => setSearch("")}
-                                    />
-                                ) : null
-                            }
-                            placeholderTextColor="#A0A0A0"
                         />
                     </View>
                 }

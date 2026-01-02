@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { LinkButtonApp } from "../components/LinkButtonApp";
 import { TextInputApp } from "../components/TextInputApp";
-import { PrimaryButtonApp } from "../components/PrimaryButtonApp";
+import { ButtonApp } from "../components/ButtonApp";
 
 import {
     loginSchema,
@@ -153,7 +153,7 @@ export default function AuthScreen() {
                         </View>
                     )}
 
-                    <PrimaryButtonApp
+                    <ButtonApp
                         onPress={
                             isRegister
                                 ? registerForm.handleSubmit(onSubmitRegister)
@@ -164,7 +164,7 @@ export default function AuthScreen() {
                         labelStyle={styles.submitLabel}
                     >
                         {isRegister ? "Registrarme" : "Entrar"}
-                    </PrimaryButtonApp>
+                    </ButtonApp>
 
                     <Divider style={[styles.divider, { backgroundColor: theme.colors.outlineVariant }]} />
 
