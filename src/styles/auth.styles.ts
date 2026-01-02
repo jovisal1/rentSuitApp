@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-const styles = StyleSheet.create({
+export const authScreenStyles = StyleSheet.create({
     container: { flex: 1, paddingHorizontal: 24, justifyContent: "center" },
     card: { borderRadius: 10, paddingVertical: 8 },
     logoBadge: {
@@ -27,5 +27,3 @@ const styles = StyleSheet.create({
     socialLabel: { letterSpacing: 0.2 },
     helperLink: { textTransform: "none", fontWeight: "600" },
 });
-
-export default styles;

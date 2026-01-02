@@ -1,7 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import styles from "../../styles/HomeScreen.styles";
 
 export default function HomeScreen() {
     const theme = useTheme();
@@ -18,3 +17,18 @@ export default function HomeScreen() {
     );
 }
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 24,
+    },
+    centerContent: {
+        alignItems: "center",
+        gap: 12,
+    },
+    title: {
+        fontWeight: "700",
+    },
+});

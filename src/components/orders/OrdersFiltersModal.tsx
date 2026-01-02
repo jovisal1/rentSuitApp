@@ -1,12 +1,21 @@
 import React from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Modal, Pressable, Text, View } from "react-native";
 
 import { DateInputFieldApp } from "../DateInputFieldApp";
 import { themeApp } from "../../theme";
 import type { OrderStatus } from "../../types/Order"; // ajusta la ruta si hace falta
+import { orderFiltersModalStyles } from "../../styles/orders.styles";
 
 type StatusFilter = OrderStatus | "ALL";
+
+const STATUS_OPTIONS: Array<{ label: string; value: StatusFilter }> = [
+    { label: "Todos", value: "ALL" },
+    { label: "Preparado", value: "PREPARADO" },
+    { label: "Entregado", value: "ENTREGADO" },
+    { label: "Devuelto", value: "DEVUELTO" },
+    { label: "Pendiente revisión", value: "PENDIENTE_REVISION" },
+    { label: "Finalizado", value: "FINALIZADO" },
+];
 
 interface OrdersFiltersModalProps {
     visible: boolean;
@@ -16,7 +25,6 @@ interface OrdersFiltersModalProps {
     endDateTo: Date | null;
 
     status: StatusFilter;
-    statusOptions: Array<{ label: string; value: StatusFilter }>;
 
     onChangeStartDate: (date: Date | null) => void;
     onChangeEndDate: (date: Date | null) => void;
@@ -32,7 +40,6 @@ export default function OrdersFiltersModal({
     startDateFrom,
     endDateTo,
     status,
-    statusOptions,
     onChangeStartDate,
     onChangeEndDate,
     onChangeStatus,
@@ -42,16 +49,16 @@ export default function OrdersFiltersModal({
     return (
         <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
             {/* Overlay: cerrar tocando fuera */}
-            <Pressable style={styles.overlay} onPress={onClose} />
+            <Pressable style={orderFiltersModalStyles.overlay} onPress={onClose} />
 
-            <View style={styles.sheet}>
-                <View style={styles.sheetHeader}>
-                    <Text style={styles.sheetTitle}>Filtros</Text>
+            <View style={orderFiltersModalStyles.sheet}>
+                <View style={orderFiltersModalStyles.sheetHeader}>
+                    <Text style={orderFiltersModalStyles.sheetTitle}>Filtros</Text>
                 </View>
 
-                <View style={styles.sheetContent}>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Fecha inicio (desde)</Text>
+                <View style={orderFiltersModalStyles.sheetContent}>
+                    <View style={orderFiltersModalStyles.row}>
+                        <Text style={orderFiltersModalStyles.label}>Fecha inicio (desde)</Text>
                         <DateInputFieldApp
                             labelWhenEmpty="Selecciona fecha"
                             value={startDateFrom}
@@ -59,8 +66,8 @@ export default function OrdersFiltersModal({
                         />
                     </View>
 
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Fecha fin (hasta)</Text>
+                    <View style={orderFiltersModalStyles.row}>
+                        <Text style={orderFiltersModalStyles.label}>Fecha fin (hasta)</Text>
                         <DateInputFieldApp
                             labelWhenEmpty="Selecciona fecha"
                             value={endDateTo}
@@ -68,10 +75,10 @@ export default function OrdersFiltersModal({
                         />
                     </View>
 
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Estado</Text>
-                        <View style={styles.statusPills}>
-                            {statusOptions.map((opt) => {
+                    <View style={orderFiltersModalStyles.row}>
+                        <Text style={orderFiltersModalStyles.label}>Estado</Text>
+                        <View style={orderFiltersModalStyles.statusPills}>
+                            {STATUS_OPTIONS.map((opt) => {
                                 const selected = status === opt.value;
 
                                 return (
@@ -79,13 +86,13 @@ export default function OrdersFiltersModal({
                                         key={opt.value}
                                         onPress={() => onChangeStatus(opt.value)}
                                         style={[
-                                            styles.pill,
+                                            orderFiltersModalStyles.pill,
                                             selected && { borderColor: themeApp.colors.primary },
                                         ]}
                                     >
                                         <Text
                                             style={[
-                                                styles.pillText,
+                                                orderFiltersModalStyles.pillText,
                                                 selected && {
                                                     color: themeApp.colors.primary,
                                                     fontWeight: "700",
@@ -101,14 +108,14 @@ export default function OrdersFiltersModal({
                     </View>
                 </View>
 
-                <View style={styles.sheetActions}>
-                    <Pressable style={styles.secondaryBtn} onPress={onClear}>
-                        <Text style={styles.secondaryBtnText}>Limpiar</Text>
+                <View style={orderFiltersModalStyles.sheetActions}>
+                    <Pressable style={orderFiltersModalStyles.secondaryBtn} onPress={onClear}>
+                        <Text style={orderFiltersModalStyles.secondaryBtnText}>Limpiar</Text>
                     </Pressable>
 
                     <Pressable
                         style={[
-                            styles.primaryBtn,
+                            orderFiltersModalStyles.primaryBtn,
                             {
                                 backgroundColor: themeApp.colors.primary,
                                 borderColor: themeApp.colors.primary,
@@ -116,7 +123,7 @@ export default function OrdersFiltersModal({
                         ]}
                         onPress={onApply}
                     >
-                        <Text style={styles.primaryBtnText}>Aceptar</Text>
+                        <Text style={orderFiltersModalStyles.primaryBtnText}>Aceptar</Text>
                     </Pressable>
                 </View>
             </View>
@@ -124,90 +131,3 @@ export default function OrdersFiltersModal({
     );
 }
 
-const styles = StyleSheet.create({
-    overlay: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.35)",
-    },
-
-    sheet: {
-        backgroundColor: "#FFF",
-        borderTopLeftRadius: 18,
-        borderTopRightRadius: 18,
-        paddingBottom: 12,
-        borderTopWidth: 1,
-        borderColor: "#EEE",
-    },
-
-    sheetHeader: {
-        paddingHorizontal: 16,
-        paddingTop: 12,
-        paddingBottom: 10,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    sheetTitle: {
-        fontSize: 16,
-        fontWeight: "800",
-        color: themeApp.colors.primary,
-    },
-    closeIcon: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-
-    sheetContent: {
-        paddingHorizontal: 16,
-        gap: 12,
-        paddingBottom: 10,
-    },
-
-    row: { gap: 8 },
-    label: {
-        color: "#333",
-        fontWeight: "700",
-    },
-
-    statusPills: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-    pill: {
-        borderWidth: 1,
-        borderColor: "#DDD",
-        borderRadius: 999,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-    },
-    pillText: { color: "#333", fontWeight: "600" },
-
-    sheetActions: {
-        paddingHorizontal: 16,
-        paddingTop: 10,
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        gap: 10,
-    },
-
-    secondaryBtn: {
-        borderWidth: 1,
-        borderColor: "#DDD",
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 14,
-        backgroundColor: "#FFF",
-    },
-    secondaryBtnText: { color: "#333", fontWeight: "700" },
-
-    primaryBtn: {
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 14,
-    },
-    primaryBtnText: {
-        color: (themeApp as any)?.colors?.onPrimary ?? "#FFF",
-        fontWeight: "800",
-    },
-});

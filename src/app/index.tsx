@@ -15,7 +15,7 @@ import {
     LoginFormValues,
     RegisterFormValues,
 } from "../schemas/auth.schema";
-import styles from "../styles/AuthScreen.styles";
+import { authScreenStyles } from "../styles/auth.styles";
 
 export default function AuthScreen() {
     const theme = useTheme();
@@ -65,23 +65,23 @@ export default function AuthScreen() {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }]}>
-            <Card style={styles.card} mode="elevated">
+        <View style={[authScreenStyles.container, { backgroundColor: theme.colors.surfaceVariant }]}>
+            <Card style={authScreenStyles.card} mode="elevated">
                 <Card.Content>
-                    <View style={[styles.logoBadge, { backgroundColor: theme.colors.primary }]} />
+                    <View style={[authScreenStyles.logoBadge, { backgroundColor: theme.colors.primary }]} />
 
-                    <Text variant="displaySmall" style={styles.greeting}>
+                    <Text variant="displaySmall" style={authScreenStyles.greeting}>
                         Hey,
                     </Text>
-                    <Text variant="headlineLarge" style={styles.title}>
+                    <Text variant="headlineLarge" style={authScreenStyles.title}>
                         {isRegister ? "Crea tu cuenta" : "Inicia sesión"}
                     </Text>
 
-                    <View style={styles.helperRow}>
+                    <View style={authScreenStyles.helperRow}>
                         <Text variant="bodySmall">
                             {isRegister ? "¿Ya tienes cuenta?" : "Si eres nuevo /"}
                         </Text>
-                        <LinkButtonApp onPress={toggleMode} labelStyle={styles.helperLink}>
+                        <LinkButtonApp onPress={toggleMode} labelStyle={authScreenStyles.helperLink}>
                             {isRegister ? "Entrar" : "Crear cuenta"}
                         </LinkButtonApp>
                     </View>
@@ -140,14 +140,14 @@ export default function AuthScreen() {
                     )}
 
                     {!isRegister && (
-                        <View style={styles.resetRow}>
+                        <View style={authScreenStyles.resetRow}>
                             <Text
                                 variant="bodySmall"
-                                style={[styles.subtleText, { color: theme.colors.onSurfaceVariant }]}
+                                style={[authScreenStyles.subtleText, { color: theme.colors.onSurfaceVariant }]}
                             >
                                 ¿Olvidaste tu contraseña? /
                             </Text>
-                            <Button compact mode="text" labelStyle={styles.helperLink}>
+                            <Button compact mode="text" labelStyle={authScreenStyles.helperLink}>
                                 Restablecer
                             </Button>
                         </View>
@@ -161,27 +161,27 @@ export default function AuthScreen() {
                         }
                         loading={isSubmitting}
                         disabled={isSubmitting}
-                        labelStyle={styles.submitLabel}
+                        labelStyle={authScreenStyles.submitLabel}
                     >
                         {isRegister ? "Registrarme" : "Entrar"}
                     </ButtonApp>
 
-                    <Divider style={[styles.divider, { backgroundColor: theme.colors.outlineVariant }]} />
+                    <Divider style={[authScreenStyles.divider, { backgroundColor: theme.colors.outlineVariant }]} />
 
                     <Text
                         variant="labelSmall"
-                        style={[styles.socialHint, { color: theme.colors.onSurfaceVariant }]}
+                        style={[authScreenStyles.socialHint, { color: theme.colors.onSurfaceVariant }]}
                     >
                         o continúa con
                     </Text>
 
-                    <View style={styles.socialRow}>
+                    <View style={authScreenStyles.socialRow}>
                         <Button
                             mode="outlined"
                             icon="google"
                             compact
-                            style={[styles.socialButton, { borderColor: theme.colors.outlineVariant }]}
-                            labelStyle={[styles.socialLabel, { color: theme.colors.onSurface }]}
+                            style={[authScreenStyles.socialButton, { borderColor: theme.colors.outlineVariant }]}
+                            labelStyle={[authScreenStyles.socialLabel, { color: theme.colors.onSurface }]}
                             onPress={() => console.log("google login")}
                         >
                             Google
@@ -191,8 +191,8 @@ export default function AuthScreen() {
                             mode="outlined"
                             icon="apple"
                             compact
-                            style={[styles.socialButton, { borderColor: theme.colors.outlineVariant }]}
-                            labelStyle={[styles.socialLabel, { color: theme.colors.onSurface }]}
+                            style={[authScreenStyles.socialButton, { borderColor: theme.colors.outlineVariant }]}
+                            labelStyle={[authScreenStyles.socialLabel, { color: theme.colors.onSurface }]}
                             onPress={() => console.log("apple login")}
                         >
                             Apple

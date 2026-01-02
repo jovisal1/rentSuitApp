@@ -78,12 +78,12 @@ const styles = StyleSheet.create({
         letterSpacing: 0.3,
         marginBottom: -2,
     },
-    valueText: { fontSize: 14, color: "#333", fontWeight: "500", paddingVertical: 4 },
+    valueText: { fontSize: 14, color: "#333", fontWeight: "500", paddingVertical: 3 },
 
-    miniInput: { height: 30, backgroundColor: "transparent", fontSize: 14, paddingHorizontal: 0 },
+    miniInput: { height: 28, backgroundColor: "transparent", fontSize: 14, paddingHorizontal: 0 },
 
     helper: {
-        marginTop: -6, // para que no “abra” demasiado hueco
+        marginTop: -3,
         paddingHorizontal: 0,
     },
 });

@@ -1,9 +1,10 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { themeApp } from "../../theme";
 import { SearchInputApp } from "../SearchInputApp";
+import { ordersHeaderStyle } from "../../styles/orders.styles";
 
 interface OrdersHeaderProps {
     text: string;
@@ -19,22 +20,22 @@ export default function OrdersHeader({
     onOpenFilters,
 }: OrdersHeaderProps) {
     return (
-        <View style={styles.header}>
-            <View style={styles.topBar}>
+        <View style={ordersHeaderStyle.header}>
+            <View style={ordersHeaderStyle.topBar}>
                 <SearchInputApp
                     value={text}
                     onChangeText={onChangeText}
                     placeholder="Buscar pedidos..."
-                    style={styles.searchInput}
+                    style={ordersHeaderStyle.searchInput}
                 />
 
-                <Pressable style={styles.filtersButton} onPress={onOpenFilters}>
+                <Pressable style={ordersHeaderStyle.filtersButton} onPress={onOpenFilters}>
                     <MaterialCommunityIcons
                         name="tune-variant"
                         size={18}
                         color={themeApp.colors.primary}
                     />
-                    <Text style={styles.filtersButtonText}>
+                    <Text style={ordersHeaderStyle.filtersButtonText}>
                         Filtros{activeFiltersCount ? ` (${activeFiltersCount})` : ""}
                     </Text>
                 </Pressable>
@@ -43,28 +44,4 @@ export default function OrdersHeader({
     );
 }
 
-const styles = StyleSheet.create({
-    header: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8 },
-    topBar: { flexDirection: "row", gap: 10, alignItems: "center", justifyContent: "center" },
-    searchInput: {
-        backgroundColor: "#eaebec",
-        height: 45,
-        fontSize: 14,
-        flex: 1,
-    },
-    filtersButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-        borderWidth: 1,
-        borderColor: "#DDD",
-        borderRadius: 10,
-        paddingVertical: 12,
-        paddingHorizontal: 12,
-        backgroundColor: "#FFF",
-    },
-    filtersButtonText: {
-        color: themeApp.colors.primary,
-        fontWeight: "700",
-    },
-});
+
