@@ -23,6 +23,8 @@ import { CustomerContactInfo } from "../../../components/customers/CustomerConta
 import { CustomerOrders } from "../../../components/customers/CustomerOrders";
 import { getCustomerById, deleteCustomer } from "../../../services/customerService"; // <-- añade deleteCustomer en tu service
 import { themeApp } from "../../../theme";
+import { compactEmptyStateStyles } from "../../../styles/common.styles";
+import { customerInfoStyle } from "../../../styles/customers.styles";
 
 export default function CustomerProfileScreen() {
     const theme = useTheme();
@@ -81,16 +83,16 @@ export default function CustomerProfileScreen() {
 
     if (isLoading) {
         return (
-            <View style={[styles.emptyContainer, { backgroundColor: theme.colors.background }]}>
-                <Text style={styles.emptyText}>Cargando cliente...</Text>
+            <View style={[compactEmptyStateStyles.emptyContainer, { backgroundColor: theme.colors.background }]}>
+                <Text style={compactEmptyStateStyles.emptyText}>Cargando cliente...</Text>
             </View>
         );
     }
 
     if (!customer) {
         return (
-            <View style={[styles.emptyContainer, { backgroundColor: theme.colors.background }]}>
-                <Text style={styles.emptyText}>Cliente no encontrado.</Text>
+            <View style={[compactEmptyStateStyles.emptyContainer, { backgroundColor: theme.colors.background }]}>
+                <Text style={compactEmptyStateStyles.emptyText}>Cliente no encontrado.</Text>
             </View>
         );
     }
@@ -98,12 +100,12 @@ export default function CustomerProfileScreen() {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
+            style={customerInfoStyle.container}
         >
-            <View style={styles.fixedHeader}>
-                <View style={styles.headerSection}>
-                    <View style={styles.headerLeft}>
-                        <View style={styles.avatarContainer}>
+            <View style={customerInfoStyle.fixedHeader}>
+                <View style={customerInfoStyle.headerSection}>
+                    <View style={customerInfoStyle.headerLeft}>
+                        <View style={customerInfoStyle.avatarContainer}>
                             <Avatar.Text
                                 size={64}
                                 label={customer.name.substring(0, 2).toUpperCase()}
@@ -112,15 +114,15 @@ export default function CustomerProfileScreen() {
                             />
                             <View
                                 style={[
-                                    styles.statusIndicator,
+                                    customerInfoStyle.statusIndicator,
                                     { backgroundColor: customer.active ? "#4CAF50" : "#CCC" },
                                 ]}
                             />
                         </View>
 
-                        <View style={styles.infoTextContainer}>
-                            <Text style={styles.userNameText}>{customer.name}</Text>
-                            <Text style={styles.userSubText}>
+                        <View style={customerInfoStyle.infoTextContainer}>
+                            <Text style={customerInfoStyle.userNameText}>{customer.name}</Text>
+                            <Text style={customerInfoStyle.userSubText}>
                                 ID: {customer.id} • {customer.active ? "Activo" : "Inactivo"}
                             </Text>
                         </View>
@@ -136,8 +138,8 @@ export default function CustomerProfileScreen() {
                     />
                 </View>
 
-                <View style={styles.segmentedControlWrapper}>
-                    <View style={styles.segmentedControlBackground}>
+                <View style={customerInfoStyle.segmentedControlWrapper}>
+                    <View style={customerInfoStyle.segmentedControlBackground}>
                         {["Datos de contacto", "Pedidos"].map((tab) => {
                             const isActive = activeTab === tab;
                             return (
@@ -147,11 +149,11 @@ export default function CustomerProfileScreen() {
                                         setActiveTab(tab);
                                         setIsEditing(false);
                                     }}
-                                    style={[styles.segmentItem, isActive && styles.segmentItemActive]}
+                                    style={[customerInfoStyle.segmentItem, isActive && customerInfoStyle.segmentItemActive]}
                                 >
                                     <Text
                                         style={[
-                                            styles.segmentText,
+                                            customerInfoStyle.segmentText,
                                             isActive && { color: themeApp.colors.primary, fontWeight: "700" },
                                         ]}
                                     >
@@ -165,8 +167,8 @@ export default function CustomerProfileScreen() {
             </View>
 
             <ScrollView
-                style={[styles.scrollArea, { backgroundColor: theme.colors.background }]}
-                contentContainerStyle={styles.scrollContent}
+                style={[customerInfoStyle.scrollArea, { backgroundColor: theme.colors.background }]}
+                contentContainerStyle={customerInfoStyle.scrollContent}
                 showsVerticalScrollIndicator={false}
                 alwaysBounceVertical={false}
             >
@@ -208,57 +210,3 @@ export default function CustomerProfileScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#FBFBFC" },
-    fixedHeader: {
-        backgroundColor: "#FFF",
-        borderBottomWidth: 1,
-        borderBottomColor: "#F0F0F0",
-        zIndex: 10,
-    },
-
-    headerSection: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 20,
-        paddingTop: 15,
-        marginBottom: 15,
-    },
-    headerLeft: {
-        flexDirection: "row",
-        alignItems: "center",
-        flex: 1,
-    },
-
-    avatarContainer: { position: "relative" },
-    statusIndicator: {
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        width: 14,
-        height: 14,
-        borderRadius: 7,
-        borderWidth: 2,
-        borderColor: "#FFF",
-    },
-    infoTextContainer: { marginLeft: 15 },
-    userNameText: { fontSize: 17, fontWeight: "700", color: "#1A1A1A" },
-    userSubText: { fontSize: 12, color: "#999" },
-
-    segmentedControlWrapper: { paddingHorizontal: 16, marginBottom: 10 },
-    segmentedControlBackground: {
-        flexDirection: "row",
-        backgroundColor: "#F0F1F5",
-        borderRadius: 8,
-        padding: 2,
-    },
-    segmentItem: { flex: 1, paddingVertical: 7, alignItems: "center", borderRadius: 6 },
-    segmentItemActive: { backgroundColor: "#FFF", elevation: 1 },
-    segmentText: { fontSize: 12, color: "#888" },
-
-    scrollArea: { flex: 1 },
-    scrollContent: { padding: 12, paddingBottom: 100, flexGrow: 1 },
-
-    emptyContainer: { flex: 1, alignItems: "center", justifyContent: "center", marginTop: 50 },
-    emptyText: { color: "#BBB", fontSize: 13, marginTop: 8 },
-});

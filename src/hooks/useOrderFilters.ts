@@ -68,8 +68,8 @@ export function useOrderFilters(
         return (startDateFrom ? 1 : 0) + (endDateTo ? 1 : 0) + (status !== "ALL" ? 1 : 0);
     }, [startDateFrom, endDateTo, status]);
 
-    const openFilters = useCallback(() => setFiltersOpen(true), []);
-    const closeFilters = useCallback(() => setFiltersOpen(false), []);
+    // const openFilters = useCallback(() => setFiltersOpen(true), []);
+    // const closeFilters = useCallback(() => setFiltersOpen(false), []);
     const toggleFilters = useCallback(() => setFiltersOpen((v) => !v), []);
 
     const clearAdvancedFilters = useCallback(() => {
@@ -103,8 +103,6 @@ export function useOrderFilters(
         setStatus,
 
         // helpers
-        openFilters,
-        closeFilters,
         toggleFilters,
         clearAdvancedFilters,
         clearAllFilters,

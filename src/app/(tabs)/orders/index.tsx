@@ -17,17 +17,7 @@ import ErrorMessageApp from "../../../components/ErrorMessageApp";
 import OrdersFiltersModal from "../../../components/orders/OrdersFiltersModal";
 import OrdersHeader from "../../../components/orders/OrdersHeader";
 import { useOrderFilters } from "../../../hooks/useOrderFilters";
-
-type StatusFilter = OrderStatus | "ALL";
-
-const STATUS_OPTIONS: Array<{ label: string; value: StatusFilter }> = [
-    { label: "Todos", value: "ALL" },
-    { label: "Preparado", value: "PREPARADO" },
-    { label: "Entregado", value: "ENTREGADO" },
-    { label: "Devuelto", value: "DEVUELTO" },
-    { label: "Pendiente revisión", value: "PENDIENTE_REVISION" },
-    { label: "Finalizado", value: "FINALIZADO" },
-];
+import { emptyStateStyles } from "../../../styles/common.styles";
 
 export default function OrdersScreen() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -41,8 +31,7 @@ export default function OrdersScreen() {
         status,
         filteredOrders,
         activeAdvancedCount,
-        openFilters,
-        closeFilters,
+        setFiltersOpen,
         setText,
         setStartDateFrom,
         setEndDateTo,
@@ -96,13 +85,13 @@ export default function OrdersScreen() {
                 text={text}
                 onChangeText={setText}
                 activeFiltersCount={activeAdvancedCount}
-                onOpenFilters={openFilters}
+                onOpenFilters={() => setFiltersOpen(true)}
             />
 
             {showEmpty ? (
-                <View style={styles.emptyContainer}>
+                <View style={emptyStateStyles.emptyContainer}>
                     <MaterialCommunityIcons name="package-variant" size={40} color="#DDD" />
-                    <Text style={styles.emptyText}>
+                    <Text style={emptyStateStyles.emptyText}>
                         {activeAdvancedCount || text
                             ? "No hay pedidos con los filtros actuales."
                             : "No hay pedidos para mostrar."}
@@ -125,37 +114,21 @@ export default function OrdersScreen() {
 
             <OrdersFiltersModal
                 visible={filtersOpen}
-                onClose={() => closeFilters()}
+                onClose={() => setFiltersOpen(false)}
                 startDateFrom={startDateFrom}
                 endDateTo={endDateTo}
                 status={status}
-                statusOptions={STATUS_OPTIONS}
                 onChangeStartDate={setStartDateFrom}
                 onChangeEndDate={setEndDateTo}
                 onChangeStatus={setStatus}
                 onClear={clearAdvancedFilters}
-                onApply={() => closeFilters()}
+                onApply={() => setFiltersOpen(false)}
             />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    emptyContainer: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 50,
-        gap: 8,
-        paddingHorizontal: 16,
-    },
-    emptyText: {
-        color: "#BBB",
-        fontSize: 13,
-        marginTop: 8,
-        textAlign: "center",
-    },
-
     linkButton: {
         marginTop: 12,
         paddingVertical: 10,

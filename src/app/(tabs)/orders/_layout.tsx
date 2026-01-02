@@ -8,7 +8,6 @@ export default function RootLayout() {
             header: (props) => <HeaderApp {...props} />,
         }}>
             <Stack.Screen name="index" />
-            {/* <Stack.Screen name="customers/[customerId]" /> */}
         </Stack>
     );
 }

@@ -13,6 +13,10 @@ import { customerSchema } from "../../schemas/customer.schema";
 import { useAppSnackbar } from "../../providers/SnackBarProvider";
 import { FieldErrors, zodIssuesToFieldErrors } from "../../schemas/utils";
 import { updateCustomer } from "../../services/customerService";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+
 
 interface CustomerContactInfoProps {
     customer: Customer;
@@ -33,6 +37,12 @@ export function CustomerContactInfo({
     const isFocused = useIsFocused();
     const { show } = useAppSnackbar();
     const hasErrors = useMemo(() => Object.keys(errors).length > 0, [errors]);
+    const tabBarHeight = useBottomTabBarHeight();
+    const { bottom } = useSafeAreaInsets();
+
+    const fabGap = 5;
+    const fabBottom = tabBarHeight + bottom + fabGap;
+    const smallFabOffset = 56;
 
     const clearError = (path: string) => {
         setErrors((prev) => {
@@ -87,7 +97,6 @@ export function CustomerContactInfo({
                 }}
             />
 
-            <Divider style={styles.divider} />
 
             <EditableFieldApp
                 icon="card-account-details-outline"
@@ -101,7 +110,6 @@ export function CustomerContactInfo({
                 }}
             />
 
-            <Divider style={styles.divider} />
 
             <EditableFieldApp
                 icon="email-outline"
@@ -115,7 +123,6 @@ export function CustomerContactInfo({
                 }}
             />
 
-            <Divider style={styles.divider} />
 
             <EditableFieldApp
                 icon="phone-outline"
@@ -145,7 +152,6 @@ export function CustomerContactInfo({
                 }}
             />
 
-            <Divider style={styles.divider} />
 
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1.5 }}>
@@ -183,8 +189,6 @@ export function CustomerContactInfo({
                 </View>
             </View>
 
-            <Divider style={styles.divider} />
-
             <View style={styles.notesContainer}>
                 <View style={styles.notesHeader}>
                     <MaterialCommunityIcons
@@ -220,7 +224,7 @@ export function CustomerContactInfo({
                     {isEditing && (
                         <FAB
                             icon="close"
-                            style={styles.fabSmall}
+                            style={[styles.fabSmall, { bottom: fabBottom + smallFabOffset }]}
                             color={themeApp.colors.primary}
                             onPress={handleCancel}
                             size="small"
@@ -229,7 +233,10 @@ export function CustomerContactInfo({
 
                     <FAB
                         icon={isEditing ? "check" : "pencil"}
-                        style={[styles.fabMain, { backgroundColor: themeApp.colors.primary }]}
+                        style={[
+                            styles.fabMain,
+                            { bottom: fabBottom, backgroundColor: themeApp.colors.primary },
+                        ]}
                         color="white"
                         onPress={isEditing ? handleSave : handleEdit}
                         size="medium"
@@ -251,9 +258,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         borderWidth: 1,
         borderColor: "#F0F0F0",
-        paddingBottom: 15,
+        paddingBottom: 10,
     },
-    divider: { backgroundColor: "#F8F8F8", marginVertical: 2 },
     sectionHeader: { marginTop: 12, marginBottom: 4, paddingLeft: 2 },
     sectionTitle: {
         fontSize: 10,
@@ -282,7 +288,6 @@ const styles = StyleSheet.create({
     fabMain: {
         position: "absolute",
         right: 20,
-        bottom: 55,
         alignItems: "center",
         borderRadius: 30,
         elevation: 3,
@@ -290,7 +295,6 @@ const styles = StyleSheet.create({
     fabSmall: {
         position: "absolute",
         right: 30,
-        bottom: 120,
         alignItems: "center",
         backgroundColor: "#F0F1F5",
         marginBottom: 10,
