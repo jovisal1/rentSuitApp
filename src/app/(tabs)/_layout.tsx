@@ -22,6 +22,17 @@ export default function TabsLayout() {
                     ),
                 }}
             />
+
+            <Tabs.Screen
+                name="orders"
+                options={{
+                    title: "Pedidos",
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="package-variant" color={color} size={size} />
+                    ),
+                }}
+            />
+
             <Tabs.Screen
                 name="customers"
                 options={{
