@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Platform, Pressable, Text, TextInput, View, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTheme } from "react-native-paper";
 import { formatDateForDisplay, toDate } from "../services/utils";
 
 
@@ -11,6 +12,7 @@ type DateFieldProps = {
 };
 
 export function DateInputFieldApp({ labelWhenEmpty, value, onChange }: DateFieldProps) {
+    const theme = useTheme();
     const [showPicker, setShowPicker] = useState(false);
 
     // WEB: usamos input type="date"
@@ -27,7 +29,14 @@ export function DateInputFieldApp({ labelWhenEmpty, value, onChange }: DateField
                         onChange(new Date(ms));
                     }}
                     placeholder={labelWhenEmpty}
-                    style={dfStyles.webInput}
+                    style={[
+                        dfStyles.webInput,
+                        {
+                            borderColor: theme.colors.outline,
+                            backgroundColor: theme.colors.surface,
+                            color: theme.colors.onSurface,
+                        },
+                    ]}
                     // react-native-web lo pasa al <input>; TS puede que no lo tenga tipado:
                     {...({ type: "date" } as any)}
                 />
@@ -38,8 +47,14 @@ export function DateInputFieldApp({ labelWhenEmpty, value, onChange }: DateField
     // NATIVO: pressable + DateTimePicker
     return (
         <View>
-            <Pressable style={dfStyles.nativeField} onPress={() => setShowPicker(true)}>
-                <Text style={dfStyles.nativeText}>
+            <Pressable
+                style={[
+                    dfStyles.nativeField,
+                    { borderColor: theme.colors.outline, backgroundColor: theme.colors.surface },
+                ]}
+                onPress={() => setShowPicker(true)}
+            >
+                <Text style={[dfStyles.nativeText, { color: theme.colors.onSurface }]}>
                     {value ? formatDateForDisplay(value) : labelWhenEmpty}
                 </Text>
             </Pressable>
@@ -62,17 +77,15 @@ export function DateInputFieldApp({ labelWhenEmpty, value, onChange }: DateField
 const dfStyles = StyleSheet.create({
     nativeField: {
         borderWidth: 1,
-        borderColor: "#DDD",
         borderRadius: 10,
         padding: 12,
         justifyContent: "center",
     },
-    nativeText: { color: "#111" },
+    nativeText: {},
 
     webWrapper: { flex: 1 },
     webInput: {
         borderWidth: 1,
-        borderColor: "#DDD",
         borderRadius: 10,
         padding: 12,
     },

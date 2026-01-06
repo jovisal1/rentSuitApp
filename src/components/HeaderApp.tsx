@@ -1,9 +1,10 @@
-import { StyleSheet, View, Pressable } from "react-native";
+import { Alert, StyleSheet, View, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Avatar, Divider, Menu, Text, useTheme } from "react-native-paper";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useUserStore } from "../stores/user.store";
 
 interface CustomHeaderProps {
     options: any;
@@ -16,6 +17,8 @@ interface CustomHeaderProps {
 export function HeaderApp({ options, back }: CustomHeaderProps) {
     const theme = useTheme();
     const router = useRouter();
+    const clearUser = useUserStore((state) => state.clearUser);
+    const user = useUserStore((state) => state.user);
     const styles = useStyles(theme);
 
     const [visible, setVisible] = useState(false);
@@ -55,16 +58,52 @@ export function HeaderApp({ options, back }: CustomHeaderProps) {
                         onDismiss={closeMenu}
                         anchor={
                             <Pressable onPress={openMenu}>
-                                <Avatar.Image
-                                    size={32}
-                                    source={{ uri: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&auto=format&fit=crop&q=80" }}
-                                />
+                                {user?.avatarUrl ? (
+                                    <Avatar.Image size={32} source={{ uri: user.avatarUrl }} />
+                                ) : (
+                                    <Avatar.Text
+                                        size={32}
+                                        label={(user?.name ?? "U").substring(0, 2).toUpperCase()}
+                                    />
+                                )}
                             </Pressable>
                         }>
-                        <Menu.Item onPress={() => { }} title="Mi Perfil" />
-                        <Menu.Item onPress={() => { }} title="Ajustes" />
+                        <Menu.Item
+                            onPress={() => {
+                                closeMenu();
+                                router.push("/profile");
+                            }}
+                            title="Mi Perfil"
+                        />
+                        <Menu.Item
+                            onPress={() => {
+                                closeMenu();
+                                router.push("/preferences");
+                            }}
+                            title="Ajustes"
+                        />
                         <Divider />
-                        <Menu.Item onPress={() => { }} title="Cerrar Sesión" />
+                        <Menu.Item
+                            onPress={() => {
+                                closeMenu();
+                                Alert.alert(
+                                    "Cerrar sesión",
+                                    "¿Seguro que quieres salir?",
+                                    [
+                                        { text: "Cancelar", style: "cancel" },
+                                        {
+                                            text: "Salir",
+                                            style: "destructive",
+                                            onPress: async () => {
+                                                clearUser();
+                                                router.replace("/");
+                                            },
+                                        },
+                                    ],
+                                );
+                            }}
+                            title="Cerrar Sesión"
+                        />
                     </Menu>
                 </View>
 
@@ -76,7 +115,7 @@ export function HeaderApp({ options, back }: CustomHeaderProps) {
 const useStyles = (theme) => StyleSheet.create({
     safeArea: {
         backgroundColor: theme.colors.surface,
-        shadowColor: "#000",
+        shadowColor: theme.colors.shadow,
         elevation: 2,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
