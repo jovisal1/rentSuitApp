@@ -1,15 +1,21 @@
 import { useCallback, useMemo, useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { FlatList, StyleSheet, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { FAB, Portal, useTheme } from "react-native-paper";
+import { router } from "expo-router";
 import CustomerCardApp from "@/components/customers/CustomerCardApp";
 import { getCustomers } from "@/services/customerService";
 import { Customer } from "@/types/Customer";
 import { SearchInputApp } from "@/components/SearchInputApp";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 export default function CustomersScreen() {
     const theme = useTheme();
+    const tabBarHeight = useBottomTabBarHeight();
+    const { bottom } = useSafeAreaInsets();
+    const isFocused = useIsFocused();
     const [search, setSearch] = useState("");
     const [customers, setCustomers] = useState<Customer[]>([]);
 
@@ -65,6 +71,23 @@ export default function CustomersScreen() {
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
             />
+            {isFocused && (
+                <Portal>
+                    <FAB
+                        icon="plus"
+                        style={[
+                            styles.fab,
+                            {
+                                backgroundColor: theme.colors.primary,
+                                bottom: tabBarHeight + bottom + 12,
+                            },
+                        ]}
+                        color="white"
+                        onPress={() => router.push("/customers/new")}
+                        accessibilityLabel="Crear cliente"
+                    />
+                </Portal>
+            )}
         </View>
     );
 }
@@ -90,5 +113,11 @@ const styles = StyleSheet.create({
         gap: 10,
         alignItems: "center",
         justifyContent: "center"
+    },
+    fab: {
+        position: "absolute",
+        right: 20,
+        borderRadius: 30,
+        elevation: 3,
     },
 });

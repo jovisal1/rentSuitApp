@@ -37,3 +37,23 @@ export const deleteCustomer = async (id: number): Promise<boolean> => {
     customersDb.splice(index, 1);
     return Promise.resolve(true);
 };
+
+export const createCustomer = async (payload: Customer): Promise<Customer> => {
+    const nextId = customersDb.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+    const nextAddressId =
+        customersDb.reduce((max, item) => Math.max(max, item.address.id), 0) + 1;
+
+    const newCustomer: Customer = {
+        ...payload,
+        id: nextId,
+        address: {
+            ...payload.address,
+            id: nextAddressId,
+            isPrimary: true,
+        },
+        active: payload.active ?? true,
+    };
+
+    customersDb.unshift(newCustomer);
+    return Promise.resolve({ ...newCustomer });
+};

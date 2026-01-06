@@ -6,15 +6,13 @@ import {
     Menu,
     Text,
     useTheme,
-    Portal,
-    Dialog,
-    Button,
 } from "react-native-paper";
 import { useContext, useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "@/stores/user.store";
 import { AuthContext } from "@/providers/AuthProvider";
+import { CommonDialogApp } from "@/components/CommonDialogApp";
 
 interface CustomHeaderProps {
     options: any;
@@ -37,7 +35,6 @@ export function HeaderApp({ options, back }: CustomHeaderProps) {
 
     const openConfirmLogout = () => {
         closeMenu();
-        // Importante: abrir el diálogo en el siguiente tick evita colisiones con el overlay del Menu
         setTimeout(() => setConfirmVisible(true), 0);
     };
 
@@ -45,7 +42,7 @@ export function HeaderApp({ options, back }: CustomHeaderProps) {
 
     const confirmLogout = async () => {
         setConfirmVisible(false);
-        await authState.logOut(); // aquí haces tu clearUser + clearStorage + navegación
+        await authState.logOut();
     };
 
     return (
@@ -117,18 +114,15 @@ export function HeaderApp({ options, back }: CustomHeaderProps) {
                         <Menu.Item onPress={openConfirmLogout} title="Cerrar Sesión" />
                     </Menu>
 
-                    <Portal>
-                        <Dialog visible={confirmVisible} onDismiss={cancelLogout}>
-                            <Dialog.Title>Cerrar sesión</Dialog.Title>
-                            <Dialog.Content>
-                                <Text>¿Seguro que quieres salir?</Text>
-                            </Dialog.Content>
-                            <Dialog.Actions>
-                                <Button onPress={cancelLogout}>Cancelar</Button>
-                                <Button onPress={confirmLogout}>Salir</Button>
-                            </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
+                    <CommonDialogApp
+                        visible={confirmVisible}
+                        title="Cerrar sesión"
+                        message="¿Seguro que quieres salir?"
+                        cancelText="Cancelar"
+                        confirmText="Salir"
+                        onCancel={cancelLogout}
+                        onConfirm={confirmLogout}
+                    />
                 </View>
             </View>
         </SafeAreaView>

@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, Divider, FAB, Portal } from "react-native-paper";
+import { Text, FAB, Portal } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import { z } from "zod";
 
 import { EditableFieldApp } from "@/components/EditableFieldApp";
 import { TextInputApp } from "@/components/TextInputApp";
@@ -23,6 +22,10 @@ interface CustomerContactInfoProps {
     isEditing: boolean;
     setCustomer: (customer: Customer) => void;
     setIsEditing: (value: boolean) => void;
+    onSave?: (customer: Customer) => Promise<Customer | undefined>;
+    onCancel?: () => void;
+    successMessage?: string;
+    errorMessage?: string;
 }
 
 
@@ -31,9 +34,14 @@ export function CustomerContactInfo({
     isEditing,
     setCustomer,
     setIsEditing,
+    onSave,
+    onCancel,
+    successMessage,
+    errorMessage,
 }: CustomerContactInfoProps) {
     const [tempCustomer, setTempCustomer] = useState<Customer>({ ...customer });
     const [errors, setErrors] = useState<FieldErrors>({});
+    const [isSaving, setIsSaving] = useState(false);
     const isFocused = useIsFocused();
     const { show } = useAppSnackbar();
     const hasErrors = useMemo(() => Object.keys(errors).length > 0, [errors]);
@@ -60,27 +68,40 @@ export function CustomerContactInfo({
     };
 
     const handleCancel = () => {
+        if (isSaving) return;
+        if (onCancel) {
+            onCancel();
+            return;
+        }
         setCustomer(tempCustomer);
         setErrors({});
         setIsEditing(false);
     };
 
     const handleSave = async () => {
+        if (isSaving) return;
         const result = customerSchema.safeParse(customer);
         if (!result.success) {
             setErrors(zodIssuesToFieldErrors(result.error.issues));
             show({ message: "Revisa los campos marcados." });
             return;
         }
-        const savedCustomer = await updateCustomer(customer);
-        if (!savedCustomer) {
-            show({ message: "No se pudo guardar el cliente." });
-            return;
+        try {
+            setIsSaving(true);
+            const savedCustomer = onSave
+                ? await onSave(customer)
+                : await updateCustomer(customer);
+            if (!savedCustomer) {
+                show({ message: errorMessage ?? "No se pudo guardar el cliente." });
+                return;
+            }
+            setCustomer(savedCustomer);
+            setErrors({});
+            setIsEditing(false);
+            show({ message: successMessage ?? "Cambios guardados.", duration: 2000 });
+        } finally {
+            setIsSaving(false);
         }
-        setCustomer(savedCustomer);
-        setErrors({});
-        setIsEditing(false);
-        show({ message: "Cambios guardados.", duration: 2000 });
     };
 
     return (
@@ -228,6 +249,7 @@ export function CustomerContactInfo({
                             color={themeApp.colors.primary}
                             onPress={handleCancel}
                             size="small"
+                            disabled={isSaving}
                         />
                     )}
 
@@ -240,11 +262,12 @@ export function CustomerContactInfo({
                         color="white"
                         onPress={isEditing ? handleSave : handleEdit}
                         size="medium"
+                        disabled={isSaving}
+                        loading={isSaving}
                     />
                 </Portal>
             )}
 
-            {/* Opcional: banner inline si quieres reforzar visualmente (además del snackbar global) */}
             {isEditing && hasErrors ? <View style={{ height: 0 }} /> : null}
         </View>
     );
