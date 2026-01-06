@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleProp, TextStyle } from "react-native";
-import { TextInput } from "react-native-paper";
+import { TextInput, useTheme } from "react-native-paper";
 
 interface SearchInputAppProps {
     value: string;
@@ -15,6 +15,8 @@ export function SearchInputApp({
     placeholder = "Buscar...",
     style,
 }: SearchInputAppProps) {
+    const theme = useTheme();
+
     return (
         <TextInput
             mode="flat"
@@ -24,18 +26,18 @@ export function SearchInputApp({
             style={style}
             underlineColor="transparent"
             activeUnderlineColor="transparent"
-            left={<TextInput.Icon icon="magnify" color="#A0A0A0" size={20} />}
+            left={<TextInput.Icon icon="magnify" color={theme.colors.onSurfaceVariant} size={20} />}
             right={
                 value.length > 0 ? (
                     <TextInput.Icon
                         icon="close-circle"
-                        color="#A0A0A0"
+                        color={theme.colors.onSurfaceVariant}
                         size={20}
                         onPress={() => onChangeText("")}
                     />
                 ) : null
             }
-            placeholderTextColor="#A0A0A0"
+            placeholderTextColor={theme.colors.onSurfaceVariant}
         />
     );
 }

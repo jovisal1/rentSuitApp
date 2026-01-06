@@ -16,9 +16,12 @@ import {
     RegisterFormValues,
 } from "../schemas/auth.schema";
 import { authScreenStyles } from "../styles/auth.styles";
+import { login } from "../services/auth.service";
+import { useUserStore } from "../stores/user.store";
 
 export default function AuthScreen() {
     const theme = useTheme();
+    const setUser = useUserStore((state) => state.setUser);
     const [mode, setMode] = useState<"login" | "register">("login");
     const isRegister = useMemo(() => mode === "register", [mode]);
 
@@ -42,10 +45,13 @@ export default function AuthScreen() {
 
     const onSubmitLogin = async (data: LoginFormValues) => {
         try {
-            console.log("login submit", data);
+            const session = await login(data.email, data.password);
+            console.log(session)
+            setUser(session.user, session.role);
             router.replace("/(tabs)");
         } catch (e) {
-            Alert.alert("Error", "No se pudo iniciar sesión");
+            const message = e instanceof Error ? e.message : "No se pudo iniciar sesión";
+            Alert.alert("Error", message);
         }
     };
 
@@ -207,4 +213,3 @@ export default function AuthScreen() {
         </View>
     );
 }
-

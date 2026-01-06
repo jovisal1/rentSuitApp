@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     View,
     StyleSheet,
@@ -22,12 +22,13 @@ import { Customer } from "../../../types/Customer";
 import { CustomerContactInfo } from "../../../components/customers/CustomerContactInfo";
 import { CustomerOrders } from "../../../components/customers/CustomerOrders";
 import { getCustomerById, deleteCustomer } from "../../../services/customerService"; // <-- añade deleteCustomer en tu service
-import { themeApp } from "../../../theme";
-import { compactEmptyStateStyles } from "../../../styles/common.styles";
-import { customerInfoStyle } from "../../../styles/customers.styles";
+import { getCustomerInfoStyles } from "../../../styles/customers.styles";
+import { getCompactEmptyStateStyles } from "../../../styles/common.styles";
 
 export default function CustomerProfileScreen() {
     const theme = useTheme();
+    const emptyStyles = useMemo(() => getCompactEmptyStateStyles(theme), [theme]);
+    const styles = useMemo(() => getCustomerInfoStyles(theme), [theme]);
     const { customerId } = useLocalSearchParams<{ customerId?: string }>();
 
     const [activeTab, setActiveTab] = useState("Datos de contacto");
@@ -83,16 +84,16 @@ export default function CustomerProfileScreen() {
 
     if (isLoading) {
         return (
-            <View style={[compactEmptyStateStyles.emptyContainer, { backgroundColor: theme.colors.background }]}>
-                <Text style={compactEmptyStateStyles.emptyText}>Cargando cliente...</Text>
+            <View style={[emptyStyles.emptyContainer, { backgroundColor: theme.colors.background }]}>
+                <Text style={emptyStyles.emptyText}>Cargando cliente...</Text>
             </View>
         );
     }
 
     if (!customer) {
         return (
-            <View style={[compactEmptyStateStyles.emptyContainer, { backgroundColor: theme.colors.background }]}>
-                <Text style={compactEmptyStateStyles.emptyText}>Cliente no encontrado.</Text>
+            <View style={[emptyStyles.emptyContainer, { backgroundColor: theme.colors.background }]}>
+                <Text style={emptyStyles.emptyText}>Cliente no encontrado.</Text>
             </View>
         );
     }
@@ -100,29 +101,33 @@ export default function CustomerProfileScreen() {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={customerInfoStyle.container}
+            style={styles.container}
         >
-            <View style={customerInfoStyle.fixedHeader}>
-                <View style={customerInfoStyle.headerSection}>
-                    <View style={customerInfoStyle.headerLeft}>
-                        <View style={customerInfoStyle.avatarContainer}>
+            <View style={styles.fixedHeader}>
+                <View style={styles.headerSection}>
+                    <View style={styles.headerLeft}>
+                        <View style={styles.avatarContainer}>
                             <Avatar.Text
                                 size={64}
                                 label={customer.name.substring(0, 2).toUpperCase()}
-                                style={{ backgroundColor: "#F0F4F8" }}
-                                labelStyle={{ color: themeApp.colors.primary, fontWeight: "700" }}
+                                style={{ backgroundColor: theme.colors.surfaceVariant }}
+                                labelStyle={{ color: theme.colors.primary, fontWeight: "700" }}
                             />
                             <View
                                 style={[
-                                    customerInfoStyle.statusIndicator,
-                                    { backgroundColor: customer.active ? "#4CAF50" : "#CCC" },
+                                    styles.statusIndicator,
+                                    {
+                                        backgroundColor: customer.active
+                                            ? theme.colors.primary
+                                            : theme.colors.outlineVariant,
+                                    },
                                 ]}
                             />
                         </View>
 
-                        <View style={customerInfoStyle.infoTextContainer}>
-                            <Text style={customerInfoStyle.userNameText}>{customer.name}</Text>
-                            <Text style={customerInfoStyle.userSubText}>
+                        <View style={styles.infoTextContainer}>
+                            <Text style={styles.userNameText}>{customer.name}</Text>
+                            <Text style={styles.userSubText}>
                                 ID: {customer.id} • {customer.active ? "Activo" : "Inactivo"}
                             </Text>
                         </View>
@@ -131,15 +136,15 @@ export default function CustomerProfileScreen() {
                     <IconButton
                         icon="delete-outline"
                         size={22}
-                        iconColor="#D32F2F"
+                        iconColor={theme.colors.error}
                         onPress={() => setConfirmVisible(true)}
                         accessibilityLabel="Eliminar cliente"
                         disabled={isEditing || isDeleting}
                     />
                 </View>
 
-                <View style={customerInfoStyle.segmentedControlWrapper}>
-                    <View style={customerInfoStyle.segmentedControlBackground}>
+                <View style={styles.segmentedControlWrapper}>
+                    <View style={styles.segmentedControlBackground}>
                         {["Datos de contacto", "Pedidos"].map((tab) => {
                             const isActive = activeTab === tab;
                             return (
@@ -149,12 +154,12 @@ export default function CustomerProfileScreen() {
                                         setActiveTab(tab);
                                         setIsEditing(false);
                                     }}
-                                    style={[customerInfoStyle.segmentItem, isActive && customerInfoStyle.segmentItemActive]}
+                                    style={[styles.segmentItem, isActive && styles.segmentItemActive]}
                                 >
                                     <Text
                                         style={[
-                                            customerInfoStyle.segmentText,
-                                            isActive && { color: themeApp.colors.primary, fontWeight: "700" },
+                                            styles.segmentText,
+                                            isActive && { color: theme.colors.primary, fontWeight: "700" },
                                         ]}
                                     >
                                         {tab}
@@ -167,8 +172,8 @@ export default function CustomerProfileScreen() {
             </View>
 
             <ScrollView
-                style={[customerInfoStyle.scrollArea, { backgroundColor: theme.colors.background }]}
-                contentContainerStyle={customerInfoStyle.scrollContent}
+                style={[styles.scrollArea, { backgroundColor: theme.colors.background }]}
+                contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
                 alwaysBounceVertical={false}
             >
@@ -200,7 +205,7 @@ export default function CustomerProfileScreen() {
                         <Button onPress={() => setConfirmVisible(false)} disabled={isDeleting}>
                             Cancelar
                         </Button>
-                        <Button textColor="#D32F2F" onPress={handleDeleteCustomer} loading={isDeleting}>
+                        <Button textColor={theme.colors.error} onPress={handleDeleteCustomer} loading={isDeleting}>
                             Eliminar
                         </Button>
                     </Dialog.Actions>
@@ -209,4 +214,3 @@ export default function CustomerProfileScreen() {
         </KeyboardAvoidingView>
     );
 }
-

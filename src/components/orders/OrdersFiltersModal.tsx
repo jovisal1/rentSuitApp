@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
+import { useTheme } from "react-native-paper";
 
 import { DateInputFieldApp } from "../DateInputFieldApp";
-import { themeApp } from "../../theme";
 import type { OrderStatus } from "../../types/Order"; // ajusta la ruta si hace falta
-import { orderFiltersModalStyles } from "../../styles/orders.styles";
+import { getOrderFiltersModalStyles } from "../../styles/orders.styles";
 
 type StatusFilter = OrderStatus | "ALL";
 
@@ -46,19 +46,24 @@ export default function OrdersFiltersModal({
     onClear,
     onApply,
 }: OrdersFiltersModalProps) {
+    const theme = useTheme();
+    const styles = useMemo(() => getOrderFiltersModalStyles(theme), [theme]);
+
     return (
         <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
             {/* Overlay: cerrar tocando fuera */}
-            <Pressable style={orderFiltersModalStyles.overlay} onPress={onClose} />
+            <Pressable style={styles.overlay} onPress={onClose} />
 
-            <View style={orderFiltersModalStyles.sheet}>
-                <View style={orderFiltersModalStyles.sheetHeader}>
-                    <Text style={orderFiltersModalStyles.sheetTitle}>Filtros</Text>
+            <View style={styles.sheet}>
+                <View style={styles.sheetHeader}>
+                    <Text style={[styles.sheetTitle, { color: theme.colors.primary }]}>
+                        Filtros
+                    </Text>
                 </View>
 
-                <View style={orderFiltersModalStyles.sheetContent}>
-                    <View style={orderFiltersModalStyles.row}>
-                        <Text style={orderFiltersModalStyles.label}>Fecha inicio (desde)</Text>
+                <View style={styles.sheetContent}>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Fecha inicio (desde)</Text>
                         <DateInputFieldApp
                             labelWhenEmpty="Selecciona fecha"
                             value={startDateFrom}
@@ -66,8 +71,8 @@ export default function OrdersFiltersModal({
                         />
                     </View>
 
-                    <View style={orderFiltersModalStyles.row}>
-                        <Text style={orderFiltersModalStyles.label}>Fecha fin (hasta)</Text>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Fecha fin (hasta)</Text>
                         <DateInputFieldApp
                             labelWhenEmpty="Selecciona fecha"
                             value={endDateTo}
@@ -75,9 +80,9 @@ export default function OrdersFiltersModal({
                         />
                     </View>
 
-                    <View style={orderFiltersModalStyles.row}>
-                        <Text style={orderFiltersModalStyles.label}>Estado</Text>
-                        <View style={orderFiltersModalStyles.statusPills}>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Estado</Text>
+                        <View style={styles.statusPills}>
                             {STATUS_OPTIONS.map((opt) => {
                                 const selected = status === opt.value;
 
@@ -86,15 +91,15 @@ export default function OrdersFiltersModal({
                                         key={opt.value}
                                         onPress={() => onChangeStatus(opt.value)}
                                         style={[
-                                            orderFiltersModalStyles.pill,
-                                            selected && { borderColor: themeApp.colors.primary },
+                                            styles.pill,
+                                            selected && { borderColor: theme.colors.primary },
                                         ]}
                                     >
                                         <Text
                                             style={[
-                                                orderFiltersModalStyles.pillText,
+                                                styles.pillText,
                                                 selected && {
-                                                    color: themeApp.colors.primary,
+                                                    color: theme.colors.primary,
                                                     fontWeight: "700",
                                                 },
                                             ]}
@@ -108,26 +113,25 @@ export default function OrdersFiltersModal({
                     </View>
                 </View>
 
-                <View style={orderFiltersModalStyles.sheetActions}>
-                    <Pressable style={orderFiltersModalStyles.secondaryBtn} onPress={onClear}>
-                        <Text style={orderFiltersModalStyles.secondaryBtnText}>Limpiar</Text>
+                <View style={styles.sheetActions}>
+                    <Pressable style={styles.secondaryBtn} onPress={onClear}>
+                        <Text style={styles.secondaryBtnText}>Limpiar</Text>
                     </Pressable>
 
                     <Pressable
                         style={[
-                            orderFiltersModalStyles.primaryBtn,
+                            styles.primaryBtn,
                             {
-                                backgroundColor: themeApp.colors.primary,
-                                borderColor: themeApp.colors.primary,
+                                backgroundColor: theme.colors.primary,
+                                borderColor: theme.colors.primary,
                             },
                         ]}
                         onPress={onApply}
                     >
-                        <Text style={orderFiltersModalStyles.primaryBtnText}>Aceptar</Text>
+                        <Text style={styles.primaryBtnText}>Aceptar</Text>
                     </Pressable>
                 </View>
             </View>
         </Modal>
     );
 }
-

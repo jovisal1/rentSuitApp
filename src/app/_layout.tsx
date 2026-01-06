@@ -1,9 +1,9 @@
 import { Stack } from "expo-router";
-import { ActivityIndicator, MD3LightTheme as DefaultTheme, PaperProvider } from "react-native-paper";
-import { themeApp } from "../theme";
+import { ActivityIndicator } from "react-native-paper";
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SnackbarProvider } from "../providers/SnackBarProvider";
+import { ThemeProvider } from "../providers/ThemeProvider";
 
 
 export default function RootLayout() {
@@ -19,7 +19,7 @@ export default function RootLayout() {
     return (
         <SafeAreaProvider>
             <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-                <PaperProvider theme={themeApp}>
+                <ThemeProvider>
                     <SnackbarProvider>
                         <Stack screenOptions={{
                             headerShown: false
@@ -28,7 +28,7 @@ export default function RootLayout() {
                             <Stack.Screen name="(tabs)" />
                         </Stack>
                     </SnackbarProvider>
-                </PaperProvider>
+                </ThemeProvider>
             </SafeAreaView>
         </SafeAreaProvider>
     );

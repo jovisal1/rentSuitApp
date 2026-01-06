@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import { themeApp } from "../../theme";
+import { useTheme } from "react-native-paper";
 import { SearchInputApp } from "../SearchInputApp";
-import { ordersHeaderStyle } from "../../styles/orders.styles";
+import { getOrdersHeaderStyle } from "../../styles/orders.styles";
 
 interface OrdersHeaderProps {
     text: string;
@@ -19,23 +18,26 @@ export default function OrdersHeader({
     activeFiltersCount,
     onOpenFilters,
 }: OrdersHeaderProps) {
+    const theme = useTheme();
+    const styles = useMemo(() => getOrdersHeaderStyle(theme), [theme]);
+
     return (
-        <View style={ordersHeaderStyle.header}>
-            <View style={ordersHeaderStyle.topBar}>
+        <View style={styles.header}>
+            <View style={styles.topBar}>
                 <SearchInputApp
                     value={text}
                     onChangeText={onChangeText}
                     placeholder="Buscar pedidos..."
-                    style={ordersHeaderStyle.searchInput}
+                    style={styles.searchInput}
                 />
 
-                <Pressable style={ordersHeaderStyle.filtersButton} onPress={onOpenFilters}>
+                <Pressable style={styles.filtersButton} onPress={onOpenFilters}>
                     <MaterialCommunityIcons
                         name="tune-variant"
                         size={18}
-                        color={themeApp.colors.primary}
+                        color={theme.colors.primary}
                     />
-                    <Text style={ordersHeaderStyle.filtersButtonText}>
+                    <Text style={[styles.filtersButtonText, { color: theme.colors.primary }]}>
                         Filtros{activeFiltersCount ? ` (${activeFiltersCount})` : ""}
                     </Text>
                 </Pressable>
@@ -43,5 +45,3 @@ export default function OrdersHeader({
         </View>
     );
 }
-
-

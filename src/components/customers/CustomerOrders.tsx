@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { compactEmptyStateStyles } from "../../styles/common.styles";
+import { getCompactEmptyStateStyles } from "../../styles/common.styles";
 
 
 
 export function CustomerOrders() {
+    const theme = useTheme();
+    const emptyStyles = useMemo(() => getCompactEmptyStateStyles(theme), [theme]);
 
     return (
-        <View style={compactEmptyStateStyles.emptyContainer}>
-            <MaterialCommunityIcons name="package-variant" size={40} color="#DDD" />
-            <Text style={compactEmptyStateStyles.emptyText}>No se han registrado pedidos</Text>
+        <View style={emptyStyles.emptyContainer}>
+            <MaterialCommunityIcons
+                name="package-variant"
+                size={40}
+                color={theme.colors.onSurfaceVariant}
+            />
+            <Text style={emptyStyles.emptyText}>No se han registrado pedidos</Text>
         </View>
     );
 }

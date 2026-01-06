@@ -8,7 +8,7 @@ export default function TabsLayout() {
     return (
         <Tabs screenOptions={{
             tabBarActiveTintColor: theme.colors.primary,
-            tabBarInactiveTintColor: theme.colors.onSurfaceVariant ?? "#999",
+            tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
             headerStyle: { height: 0 }
         }}
         >
