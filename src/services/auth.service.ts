@@ -1,5 +1,5 @@
-import { roles, users, mockPasswords, generateMockToken } from "@/types/mocks/User.mock";
 import type { Role, User } from "@/types/User";
+import { supabase } from "@/services/supabaseClient";
 
 export type AuthSession = {
     user: User;
@@ -14,36 +14,66 @@ export type UpdateUserPayload = {
 };
 
 export const login = async (email: string, password: string): Promise<AuthSession> => {
-    const user = users.find((item) => item.email.toLowerCase() === email.trim().toLowerCase());
-    if (!user) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const { data, error } = await supabase
+        .from("users")
+        .select("id, role_id, name, email, avatar_url, roles ( id, name, description )")
+        .eq("email", normalizedEmail)
+        .maybeSingle();
+
+    if (error || !data) {
         throw new Error("Usuario o contraseña incorrectos.");
     }
 
-    const expectedPassword = mockPasswords[user.id];
-    if (expectedPassword !== password) {
+    if (!password) {
         throw new Error("Usuario o contraseña incorrectos.");
     }
 
-    const role = roles.find((item) => item.id === user.roleId);
+    const roleData = Array.isArray(data.roles) ? data.roles[0] : data.roles;
+    const role = roleData
+        ? {
+            id: roleData.id,
+            name: roleData.name,
+            description: roleData.description ?? undefined,
+        }
+        : null;
+
     if (!role) {
         throw new Error("Rol no válido.");
     }
 
-    const token = generateMockToken(user);
-    return Promise.resolve({ user, role, token });
+    const user: User = {
+        id: data.id,
+        roleId: data.role_id,
+        name: data.name,
+        email: data.email,
+        avatarUrl: data.avatar_url ?? undefined,
+    };
+
+    const token = `supabase-${data.id}-${Date.now()}`;
+    return { user, role, token };
 };
 
 export const updateUserProfile = async (payload: UpdateUserPayload): Promise<User> => {
-    const index = users.findIndex((item) => item.id === payload.id);
-    if (index === -1) {
+    const { data, error } = await supabase
+        .from("users")
+        .update({
+            name: payload.name.trim(),
+            email: payload.email.trim(),
+        })
+        .eq("id", payload.id)
+        .select("id, role_id, name, email, avatar_url")
+        .single();
+
+    if (error || !data) {
         throw new Error("Usuario no encontrado.");
     }
 
-    const updatedUser = {
-        ...users[index],
-        name: payload.name.trim(),
-        email: payload.email.trim(),
+    return {
+        id: data.id,
+        roleId: data.role_id,
+        name: data.name,
+        email: data.email,
+        avatarUrl: data.avatar_url ?? undefined,
     };
-    users[index] = updatedUser;
-    return Promise.resolve(updatedUser);
 };
