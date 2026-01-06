@@ -179,7 +179,6 @@ export default function CustomerProfileScreen() {
                     onConfirm={handleDeleteCustomer}
                     cancelDisabled={isDeleting}
                     confirmLoading={isDeleting}
-                    confirmTextColor={theme.colors.error}
                 />
             )}
         </KeyboardAvoidingView>

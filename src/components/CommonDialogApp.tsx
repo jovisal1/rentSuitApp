@@ -13,7 +13,6 @@ type CommonDialogAppProps = {
     cancelDisabled?: boolean;
     confirmDisabled?: boolean;
     confirmLoading?: boolean;
-    confirmTextColor?: string;
 };
 
 export function CommonDialogApp({
@@ -26,8 +25,7 @@ export function CommonDialogApp({
     onConfirm,
     cancelDisabled,
     confirmDisabled,
-    confirmLoading,
-    confirmTextColor,
+    confirmLoading
 }: CommonDialogAppProps) {
     const theme = useTheme();
     const styles = useStyles(theme);
@@ -57,7 +55,6 @@ export function CommonDialogApp({
                             onPress={onConfirm}
                             disabled={confirmDisabled}
                             loading={confirmLoading}
-                            textColor={confirmTextColor}
                             style={styles.button}
                         >
                             {confirmText}
@@ -77,7 +74,7 @@ const useStyles = (theme) =>
         },
         title: {
             fontWeight: "700",
-            color: theme.colors.onSurface,
+            color: theme.colors.primary,
         },
         content: {
             paddingTop: 4,
@@ -97,5 +94,6 @@ const useStyles = (theme) =>
         },
         button: {
             minWidth: 96,
+            borderRadius: 5,
         },
     });

@@ -4,8 +4,6 @@ import { Button, useTheme } from "react-native-paper";
 
 type ButtonProps = ComponentProps<typeof Button>;
 
-
-
 export function ButtonApp({ style, labelStyle, mode = "contained", ...rest }: ButtonProps) {
     const theme = useTheme();
 
