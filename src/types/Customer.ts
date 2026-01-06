@@ -22,3 +22,21 @@ export interface CustomerAddress {
     longitude?: number;
     isPrimary: boolean;
 }
+
+
+export const emptyCustomer: Customer = {
+    id: 0,
+    name: "",
+    taxId: "",
+    phone: "",
+    email: "",
+    notes: "",
+    active: true,
+    address: {
+        id: 0,
+        line1: "",
+        city: "",
+        postalCode: "",
+        isPrimary: true,
+    },
+};
