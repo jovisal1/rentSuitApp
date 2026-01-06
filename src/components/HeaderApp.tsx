@@ -1,7 +1,6 @@
 import { StyleSheet, View, Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
-    Avatar,
     Divider,
     Menu,
     Text,
@@ -10,9 +9,9 @@ import {
 import { useContext, useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useUserStore } from "@/stores/user.store";
 import { AuthContext } from "@/providers/AuthProvider";
 import { CommonDialogApp } from "@/components/CommonDialogApp";
+import { UserAvatarApp } from "@/components/UserAvatarApp";
 
 interface CustomHeaderProps {
     options: any;
@@ -22,7 +21,6 @@ interface CustomHeaderProps {
 export function HeaderApp({ options, back }: CustomHeaderProps) {
     const theme = useTheme();
     const router = useRouter();
-    const user = useUserStore((state) => state.user);
     const styles = useStyles(theme);
 
     const [menuVisible, setMenuVisible] = useState(false);
@@ -85,14 +83,7 @@ export function HeaderApp({ options, back }: CustomHeaderProps) {
                         onDismiss={closeMenu}
                         anchor={
                             <Pressable onPress={openMenu}>
-                                {user?.avatarUrl ? (
-                                    <Avatar.Image size={32} source={{ uri: user.avatarUrl }} />
-                                ) : (
-                                    <Avatar.Text
-                                        size={32}
-                                        label={(user?.name ?? "U").substring(0, 2).toUpperCase()}
-                                    />
-                                )}
+                                <UserAvatarApp size={32} />
                             </Pressable>
                         }
                     >

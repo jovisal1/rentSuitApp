@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { Platform } from "react-native";
 import { Role, User } from "@/types/User";
+import { createSelectors } from "@/stores/createSelectors";
 
 type UserState = {
     user: User | null;
@@ -54,30 +55,32 @@ const storage = createJSONStorage(() => {
     return nativeSecureStorage;
 });
 
-export const useUserStore = create<UserState>()(
-    persist(
-        (set) => ({
-            user: null,
-            role: null,
-            token: null,
+export const useUserStore = createSelectors(
+    create<UserState>()(
+        persist(
+            (set) => ({
+                user: null,
+                role: null,
+                token: null,
 
-            setUser: (user, role, token) =>
-                set((state) => ({
-                    user,
-                    role,
-                    token: token !== undefined ? token : state.token,
-                })),
+                setUser: (user, role, token) =>
+                    set((state) => ({
+                        user,
+                        role,
+                        token: token !== undefined ? token : state.token,
+                    })),
 
-            clearUser: () => set({ user: null, role: null, token: null }),
-        }),
-        {
-            name: "user-data-storage",
-            storage,
-            partialize: (state) => ({
-                user: state.user,
-                role: state.role,
-                token: state.token,
+                clearUser: () => set({ user: null, role: null, token: null }),
             }),
-        }
+            {
+                name: "user-data-storage",
+                storage,
+                partialize: (state) => ({
+                    user: state.user,
+                    role: state.role,
+                    token: state.token,
+                }),
+            }
+        )
     )
 );

@@ -1,11 +1,12 @@
 import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
-import { Avatar, Text, useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { TextInputApp } from "@/components/TextInputApp";
 import { ButtonApp } from "@/components/ButtonApp";
+import { UserAvatarApp } from "@/components/UserAvatarApp";
 import { useUserStore } from "@/stores/user.store";
 import { updateUserProfile } from "@/services/auth.service";
 
@@ -15,17 +16,6 @@ export default function ProfileScreen() {
     const { user, role, token, setUser } = useUserStore();
     const [name, setName] = useState(user?.name ?? "");
     const [email, setEmail] = useState(user?.email ?? "");
-
-    const initials = useMemo(() => {
-        const base = name || user?.name || "";
-        return base
-            .split(" ")
-            .filter(Boolean)
-            .slice(0, 2)
-            .map((part) => part[0])
-            .join("")
-            .toUpperCase();
-    }, [name, user?.name]);
 
     const handleSave = async () => {
         if (!user) return;
@@ -56,16 +46,12 @@ export default function ProfileScreen() {
 
             <View style={styles.content}>
                 <View style={styles.avatarRow}>
-                    {user?.avatarUrl ? (
-                        <Avatar.Image size={64} source={{ uri: user.avatarUrl }} />
-                    ) : (
-                        <Avatar.Text
-                            size={64}
-                            label={initials || "--"}
-                            style={{ backgroundColor: theme.colors.surfaceVariant }}
-                            labelStyle={{ color: theme.colors.primary, fontWeight: "700" }}
-                        />
-                    )}
+                    <UserAvatarApp
+                        size={64}
+                        name={name || user?.name}
+                        avatarUrl={user?.avatarUrl}
+                        roleName={role?.name}
+                    />
                     <View>
                         <Text style={[styles.nameText, { color: theme.colors.onSurface }]}>
                             {name || "Sin nombre"}

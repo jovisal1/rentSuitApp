@@ -27,14 +27,14 @@ export const users: User[] = [
         id: 2,
         roleId: 1,
         name: 'Operator 1',
-        email: 'operator1@rentalapp.com',
+        email: 'operator@gmail.com',
         avatarUrl: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=128&auto=format&fit=crop&q=80',
     },
 ];
 
 export const mockPasswords: Record<number, string> = {
     1: '1234',
-    2: 'operario',
+    2: '1234',
 };
 
 

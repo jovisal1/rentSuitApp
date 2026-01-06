@@ -23,7 +23,7 @@ export const authScreenStyles = StyleSheet.create({
         gap: 12,
         marginBottom: 4,
     },
-    socialButton: { flex: 1, borderRadius: 16 },
+    socialButton: { flex: 1, borderRadius: 5 },
     socialLabel: { letterSpacing: 0.2 },
     helperLink: { textTransform: "none", fontWeight: "600" },
 });
