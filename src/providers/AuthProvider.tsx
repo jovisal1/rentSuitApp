@@ -24,13 +24,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const user = useUserStore((state) => state.user);
     const token = useUserStore((state) => state.token);
     const clearUser = useUserStore((state) => state.clearUser);
+    const isLoggedIn = useMemo(() => Boolean(user && token), [user, token]);
+
     const [isReady, setIsReady] = useState(
         typeof useUserStore.persist?.hasHydrated === "function"
             ? useUserStore.persist.hasHydrated()
             : true
     );
-
-    const isLoggedIn = useMemo(() => Boolean(user && token), [user, token]);
 
     useEffect(() => {
         if (isReady) return;
@@ -69,7 +69,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     const logOut = async () => {
         clearUser();
-        console.log("Eliminado usuario")
         await useUserStore.persist.clearStorage();
         router.replace("/login");
     };

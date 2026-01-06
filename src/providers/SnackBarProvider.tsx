@@ -19,7 +19,6 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
     const [visible, setVisible] = useState(false);
     const [payload, setPayload] = useState<SnackbarPayload>({ message: "" });
     const actionRef = useRef<(() => void) | undefined>(undefined);
-
     const show = useCallback((next: SnackbarPayload) => {
         actionRef.current = next.onAction;
         setPayload(next);
