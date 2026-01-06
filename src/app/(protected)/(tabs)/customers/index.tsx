@@ -79,7 +79,7 @@ export default function CustomersScreen() {
                             styles.fab,
                             {
                                 backgroundColor: theme.colors.primary,
-                                bottom: tabBarHeight + bottom + 12,
+                                bottom: tabBarHeight + bottom,
                             },
                         ]}
                         color="white"
