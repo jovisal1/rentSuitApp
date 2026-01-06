@@ -126,7 +126,13 @@ export default function OrdersScreen() {
                     data={filteredOrders}
                     keyExtractor={(item) => String(item.id)}
                     renderItem={({ item }) => <OrderRow order={item} />}
-                    contentContainerStyle={{ flex: 1, backgroundColor: theme.colors.background, paddingBottom: 12 }}
+                    contentContainerStyle={[
+                        styles.listContent,
+                        { backgroundColor: theme.colors.background },
+                    ]}
+                    removeClippedSubviews={true}
+                    initialNumToRender={10}
+                    maxToRenderPerBatch={10}
                 />
             )}
 
@@ -156,5 +162,8 @@ const styles = StyleSheet.create({
     },
     linkButtonText: {
         fontWeight: "700",
+    },
+    listContent: {
+        paddingBottom: 32,
     },
 });

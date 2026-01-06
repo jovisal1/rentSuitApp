@@ -48,8 +48,7 @@ export function CustomerContactInfo({
     const tabBarHeight = useBottomTabBarHeight();
     const { bottom } = useSafeAreaInsets();
 
-    const fabGap = 5;
-    const fabBottom = tabBarHeight + bottom + fabGap;
+    const fabBottom = tabBarHeight + bottom;
     const smallFabOffset = 56;
 
     const clearError = (path: string) => {
