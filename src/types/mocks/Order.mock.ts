@@ -1,4 +1,4 @@
-import { Order, OrderLine, OrderLineSize, OrderStatusHistory } from "../Order";
+import { Order, OrderLine, OrderLineSize, OrderStatusHistory } from "@/types/Order";
 
 
 // -----------------------------------------------------

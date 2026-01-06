@@ -1,6 +1,5 @@
 
-import { Role, User } from '../User';
-// import * as Crypto from "expo-crypto";
+import { Role, User } from '@/types/User';
 
 
 // -----------------------------------------------------

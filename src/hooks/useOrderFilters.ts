@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { Order, OrderStatus } from "../types/Order";
+import type { Order, OrderStatus } from "@/types/Order";
 
 export type StatusFilter = OrderStatus | "ALL";
 

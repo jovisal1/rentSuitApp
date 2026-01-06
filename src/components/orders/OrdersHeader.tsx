@@ -2,8 +2,8 @@ import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
-import { SearchInputApp } from "../SearchInputApp";
-import { getOrdersHeaderStyle } from "../../styles/orders.styles";
+import { SearchInputApp } from "@/components/SearchInputApp";
+import { getOrdersHeaderStyle } from "@/styles/orders.styles";
 
 interface OrdersHeaderProps {
     text: string;

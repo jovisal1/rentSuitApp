@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { Image, View } from "react-native";
 import { Icon, Text, useTheme } from "react-native-paper";
-import { Customer } from "../../types/Customer";
+import { Customer } from "@/types/Customer";
 import { Link } from "expo-router";
-import { getCustomerCardStyles } from "../../styles/customers.styles";
+import { getCustomerCardStyles } from "@/styles/customers.styles";
 
 interface CustomerCardAppProps {
     customer: Customer;

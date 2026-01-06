@@ -18,12 +18,12 @@ import {
 } from "react-native-paper";
 import { router, useLocalSearchParams } from "expo-router";
 
-import { Customer } from "../../../types/Customer";
-import { CustomerContactInfo } from "../../../components/customers/CustomerContactInfo";
-import { CustomerOrders } from "../../../components/customers/CustomerOrders";
-import { getCustomerById, deleteCustomer } from "../../../services/customerService"; // <-- añade deleteCustomer en tu service
-import { getCustomerInfoStyles } from "../../../styles/customers.styles";
-import { getCompactEmptyStateStyles } from "../../../styles/common.styles";
+import { Customer } from "@/types/Customer";
+import { CustomerContactInfo } from "@/components/customers/CustomerContactInfo";
+import { CustomerOrders } from "@/components/customers/CustomerOrders";
+import { getCustomerById, deleteCustomer } from "@/services/customerService"; // <-- añade deleteCustomer en tu service
+import { getCustomerInfoStyles } from "@/styles/customers.styles";
+import { getCompactEmptyStateStyles } from "@/styles/common.styles";
 
 export default function CustomerProfileScreen() {
     const theme = useTheme();

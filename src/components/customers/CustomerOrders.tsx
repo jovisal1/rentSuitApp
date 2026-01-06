@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getCompactEmptyStateStyles } from "../../styles/common.styles";
+import { getCompactEmptyStateStyles } from "@/styles/common.styles";
 
 
 

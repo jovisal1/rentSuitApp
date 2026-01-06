@@ -5,19 +5,19 @@ import { Button, Card, Divider, Text, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { LinkButtonApp } from "../components/LinkButtonApp";
-import { TextInputApp } from "../components/TextInputApp";
-import { ButtonApp } from "../components/ButtonApp";
+import { LinkButtonApp } from "@/components/LinkButtonApp";
+import { TextInputApp } from "@/components/TextInputApp";
+import { ButtonApp } from "@/components/ButtonApp";
 
 import {
     loginSchema,
     registerSchema,
     LoginFormValues,
     RegisterFormValues,
-} from "../schemas/auth.schema";
-import { authScreenStyles } from "../styles/auth.styles";
-import { login } from "../services/auth.service";
-import { useUserStore } from "../stores/user.store";
+} from "@/schemas/auth.schema";
+import { authScreenStyles } from "@/styles/auth.styles";
+import { login } from "@/services/auth.service";
+import { useUserStore } from "@/stores/user.store";
 
 export default function AuthScreen() {
     const theme = useTheme();
@@ -46,8 +46,8 @@ export default function AuthScreen() {
     const onSubmitLogin = async (data: LoginFormValues) => {
         try {
             const session = await login(data.email, data.password);
-            console.log(session)
-            setUser(session.user, session.role);
+            console.log(session);
+            setUser(session.user, session.role, session.token);
             router.replace("/(tabs)");
         } catch (e) {
             const message = e instanceof Error ? e.message : "No se pudo iniciar sesión";

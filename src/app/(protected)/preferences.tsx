@@ -3,7 +3,7 @@ import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Switch, Text, useTheme } from "react-native-paper";
-import { useThemeContext } from "../providers/ThemeProvider";
+import { useThemeContext } from "@/providers/ThemeProvider";
 
 export default function PreferencesScreen() {
     const router = useRouter();

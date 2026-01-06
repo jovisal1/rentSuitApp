@@ -2,10 +2,10 @@ import { useCallback, useMemo, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
-import CustomerCardApp from "../../../components/customers/CustomerCardApp";
-import { getCustomers } from "../../../services/customerService";
-import { Customer } from "../../../types/Customer";
-import { SearchInputApp } from "../../../components/SearchInputApp";
+import CustomerCardApp from "@/components/customers/CustomerCardApp";
+import { getCustomers } from "@/services/customerService";
+import { Customer } from "@/types/Customer";
+import { SearchInputApp } from "@/components/SearchInputApp";
 
 
 export default function CustomersScreen() {

@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { HeaderApp } from "../../../components/HeaderApp";
+import { HeaderApp } from "@/components/HeaderApp";
 
 export default function RootLayout() {
     return (
@@ -8,6 +8,7 @@ export default function RootLayout() {
             header: (props) => <HeaderApp {...props} />,
         }}>
             <Stack.Screen name="index" />
+            <Stack.Screen name="[customerId]" />
         </Stack>
     );
 }

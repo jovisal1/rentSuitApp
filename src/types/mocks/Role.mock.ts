@@ -1,4 +1,4 @@
-import { Role } from "../User";
+import { Role } from "@/types/User";
 
 
 export const roles: Role[] = [

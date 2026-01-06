@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { Pressable, View, Text } from "react-native";
 import { useTheme } from "react-native-paper";
-import { Order } from "../../types/Order";
-import { formatDateForDisplay } from "../../services/utils";
-import { getOrderRowStyles } from "../../styles/orders.styles";
+import { Order } from "@/types/Order";
+import { formatDateForDisplay } from "@/services/utils";
+import { getOrderRowStyles } from "@/styles/orders.styles";
 
 export default function OrderRow({ order }: { order: Order }) {
     const theme = useTheme();
