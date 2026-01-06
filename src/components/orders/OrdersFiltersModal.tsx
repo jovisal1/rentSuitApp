@@ -2,9 +2,9 @@ import React, { useMemo } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { useTheme } from "react-native-paper";
 
-import { DateInputFieldApp } from "../DateInputFieldApp";
-import type { OrderStatus } from "../../types/Order"; // ajusta la ruta si hace falta
-import { getOrderFiltersModalStyles } from "../../styles/orders.styles";
+import { DateInputFieldApp } from "@/components/DateInputFieldApp";
+import type { OrderStatus } from "@/types/Order"; // ajusta la ruta si hace falta
+import { getOrderFiltersModalStyles } from "@/styles/orders.styles";
 
 type StatusFilter = OrderStatus | "ALL";
 

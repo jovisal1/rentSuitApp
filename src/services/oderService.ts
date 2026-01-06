@@ -1,5 +1,5 @@
-import { Order } from "../types/Order";
-import { orders as mockOrders } from "../types/mocks/Order.mock";
+import { Order } from "@/types/Order";
+import { orders as mockOrders } from "@/types/mocks/Order.mock";
 
 const ordersDb: Order[] = [...mockOrders];
 

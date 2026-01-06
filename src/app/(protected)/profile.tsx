@@ -4,15 +4,15 @@ import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { Avatar, Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { TextInputApp } from "../components/TextInputApp";
-import { ButtonApp } from "../components/ButtonApp";
-import { useUserStore } from "../stores/user.store";
-import { updateUserProfile } from "../services/auth.service";
+import { TextInputApp } from "@/components/TextInputApp";
+import { ButtonApp } from "@/components/ButtonApp";
+import { useUserStore } from "@/stores/user.store";
+import { updateUserProfile } from "@/services/auth.service";
 
 export default function ProfileScreen() {
     const router = useRouter();
     const theme = useTheme();
-    const { user, role, setUser } = useUserStore();
+    const { user, role, token, setUser } = useUserStore();
     const [name, setName] = useState(user?.name ?? "");
     const [email, setEmail] = useState(user?.email ?? "");
 
@@ -35,7 +35,7 @@ export default function ProfileScreen() {
                 name,
                 email,
             });
-            setUser(updatedUser, role);
+            setUser(updatedUser, role, token);
             router.back();
         } catch (e) {
             const message = e instanceof Error ? e.message : "No se pudo actualizar el perfil";

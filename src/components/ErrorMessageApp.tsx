@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMemo } from "react";
 import { View, Text } from "react-native";
 import { useTheme } from "react-native-paper";
-import { getEmptyStateStyles } from "../styles/common.styles";
+import { getEmptyStateStyles } from "@/styles/common.styles";
 
 export default function ErrorMessageApp({ errorMessage }) {
     const theme = useTheme();

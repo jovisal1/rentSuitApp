@@ -9,15 +9,15 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 
-import { Order, OrderStatus } from "../../../types/Order";
-import { getOrders } from "../../../services/oderService";
-import OrderRow from "../../../components/orders/OrderRow";
-import LoadingDataIndicatorApp from "../../../components/LoadingDataIndicatorApp";
-import ErrorMessageApp from "../../../components/ErrorMessageApp";
-import OrdersFiltersModal from "../../../components/orders/OrdersFiltersModal";
-import OrdersHeader from "../../../components/orders/OrdersHeader";
-import { useOrderFilters } from "../../../hooks/useOrderFilters";
-import { getEmptyStateStyles } from "../../../styles/common.styles";
+import { Order, OrderStatus } from "@/types/Order";
+import { getOrders } from "@/services/oderService";
+import OrderRow from "@/components/orders/OrderRow";
+import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
+import ErrorMessageApp from "@/components/ErrorMessageApp";
+import OrdersFiltersModal from "@/components/orders/OrdersFiltersModal";
+import OrdersHeader from "@/components/orders/OrdersHeader";
+import { useOrderFilters } from "@/hooks/useOrderFilters";
+import { getEmptyStateStyles } from "@/styles/common.styles";
 
 
 export default function OrdersScreen() {

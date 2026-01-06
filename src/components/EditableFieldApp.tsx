@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { ComponentProps } from "react";
 import { View, StyleSheet } from "react-native";
 import { Text, HelperText, useTheme } from "react-native-paper";
-import { TextInputApp } from "./TextInputApp";
+import { TextInputApp } from "@/components/TextInputApp";
 
 type IconName = ComponentProps<typeof MaterialCommunityIcons>["name"];
 

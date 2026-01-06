@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 
-import { darkThemeColors, lightThemeColors } from "../theme";
+import { darkThemeColors, lightThemeColors } from "@/theme";
 
 type ThemeContextValue = {
     isDark: boolean;

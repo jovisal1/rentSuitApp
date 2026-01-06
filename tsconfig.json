@@ -3,5 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "noImplicitAny": false,
+    "paths": {
+      "@/*": ["src/*"]
+    }
   }
 }

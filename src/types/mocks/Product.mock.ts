@@ -1,4 +1,4 @@
-import { Product, ProductSize } from '../Product';
+import { Product, ProductSize } from '@/types/Product';
 
 // -----------------------------------------------------
 // PRODUCTS (extended list)

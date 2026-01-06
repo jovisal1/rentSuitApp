@@ -2,9 +2,9 @@ import { Stack } from "expo-router";
 import { ActivityIndicator } from "react-native-paper";
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { SnackbarProvider } from "../providers/SnackBarProvider";
-import { ThemeProvider } from "../providers/ThemeProvider";
-
+import { SnackbarProvider } from "@/providers/SnackBarProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 export default function RootLayout() {
     const [fontsLoaded] = useFonts({
@@ -19,16 +19,22 @@ export default function RootLayout() {
     return (
         <SafeAreaProvider>
             <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-                <ThemeProvider>
-                    <SnackbarProvider>
-                        <Stack screenOptions={{
-                            headerShown: false
-                        }}>
-                            <Stack.Screen name="index" />
-                            <Stack.Screen name="(tabs)" />
-                        </Stack>
-                    </SnackbarProvider>
-                </ThemeProvider>
+                <AuthProvider>
+                    <ThemeProvider>
+                        <SnackbarProvider>
+                            <Stack screenOptions={{
+                                headerShown: false
+                            }}>
+                                <Stack.Screen
+                                    name="login"
+                                    options={{
+                                        animation: "none",
+                                    }} />
+                                <Stack.Screen name="(protected)" />
+                            </Stack>
+                        </SnackbarProvider>
+                    </ThemeProvider>
+                </AuthProvider>
             </SafeAreaView>
         </SafeAreaProvider>
     );

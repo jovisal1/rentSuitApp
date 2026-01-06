@@ -5,14 +5,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { z } from "zod";
 
-import { EditableFieldApp } from "../EditableFieldApp";
-import { TextInputApp } from "../TextInputApp";
-import { themeApp } from "../../theme";
-import { Customer } from "../../types/Customer";
-import { customerSchema } from "../../schemas/customer.schema";
-import { useAppSnackbar } from "../../providers/SnackBarProvider";
-import { FieldErrors, zodIssuesToFieldErrors } from "../../schemas/utils";
-import { updateCustomer } from "../../services/customerService";
+import { EditableFieldApp } from "@/components/EditableFieldApp";
+import { TextInputApp } from "@/components/TextInputApp";
+import { themeApp } from "@/theme";
+import { Customer } from "@/types/Customer";
+import { customerSchema } from "@/schemas/customer.schema";
+import { useAppSnackbar } from "@/providers/SnackBarProvider";
+import { FieldErrors, zodIssuesToFieldErrors } from "@/schemas/utils";
+import { updateCustomer } from "@/services/customerService";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

@@ -1,5 +1,5 @@
-import { roles, users, mockPasswords, generateMockToken } from "../types/mocks/User.mock";
-import type { Role, User } from "../types/User";
+import { roles, users, mockPasswords, generateMockToken } from "@/types/mocks/User.mock";
+import type { Role, User } from "@/types/User";
 
 export type AuthSession = {
     user: User;

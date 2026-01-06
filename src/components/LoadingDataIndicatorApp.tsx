@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ActivityIndicator, View, Text } from "react-native";
 import { useTheme } from "react-native-paper";
-import { getEmptyStateStyles } from "../styles/common.styles";
+import { getEmptyStateStyles } from "@/styles/common.styles";
 
 export default function LoadingDataIndicatorApp({ message }) {
     const theme = useTheme();

@@ -1,5 +1,5 @@
-import { Customer } from "../types/Customer";
-import { customers as mockCustomers } from "../types/mocks/Customer.mock";
+import { Customer } from "@/types/Customer";
+import { customers as mockCustomers } from "@/types/mocks/Customer.mock";
 
 const customersDb: Customer[] = [...mockCustomers];
 

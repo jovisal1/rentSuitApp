@@ -1,5 +1,5 @@
-import { Customer, CustomerAddress } from "./Customer";
-import { Product, ProductSize } from "./Product";
+import { Customer, CustomerAddress } from "@/types/Customer";
+import { Product, ProductSize } from "@/types/Product";
 
 export type OrderStatus =
     | 'PREPARADO'
