@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getCompactEmptyStateStyles } from "@/styles/common.styles";
-import { getOrdersByCustomerId } from "@/services/oderService";
-import { Order } from "@/types/Order";
 import OrderRow from "@/components/orders/OrderRow";
 import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
 import ErrorMessageApp from "@/components/ErrorMessageApp";
+import { useOrdersByCustomerQuery } from "@/hooks/queries/useOrdersByCustomerQuery";
 
 type CustomerOrdersProps = {
     customerId: number;
@@ -16,42 +15,21 @@ type CustomerOrdersProps = {
 export function CustomerOrders({ customerId }: CustomerOrdersProps) {
     const theme = useTheme();
     const emptyStyles = useMemo(() => getCompactEmptyStateStyles(theme), [theme]);
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    useEffect(() => {
-        let isMounted = true;
-
-        const loadOrders = async () => {
-            try {
-                setErrorMessage(null);
-                setIsLoading(true);
-                const data = await getOrdersByCustomerId(customerId);
-                if (!isMounted) return;
-                setOrders(data);
-            } catch {
-                if (!isMounted) return;
-                setErrorMessage("No se pudieron cargar los pedidos.");
-            } finally {
-                if (!isMounted) return;
-                setIsLoading(false);
-            }
-        };
-
-        loadOrders();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [customerId]);
+    const {
+        data: orders = [],
+        isLoading,
+        isError,
+        error,
+    } = useOrdersByCustomerQuery(customerId, Number.isFinite(customerId));
 
     if (isLoading) {
         return <LoadingDataIndicatorApp message="Cargando pedidos..." />;
     }
 
-    if (errorMessage) {
-        return <ErrorMessageApp errorMessage={errorMessage} />;
+    if (isError) {
+        const message =
+            error instanceof Error ? error.message : "No se pudieron cargar los pedidos.";
+        return <ErrorMessageApp errorMessage={message} />;
     }
 
     if (orders.length === 0) {

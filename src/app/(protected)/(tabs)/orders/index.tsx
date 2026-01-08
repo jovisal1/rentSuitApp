@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
     View,
     Text,
@@ -9,8 +9,6 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 
-import { Order, OrderStatus } from "@/types/Order";
-import { getOrders } from "@/services/oderService";
 import OrderRow from "@/components/orders/OrderRow";
 import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
 import ErrorMessageApp from "@/components/ErrorMessageApp";
@@ -18,14 +16,18 @@ import OrdersFiltersModal from "@/components/orders/OrdersFiltersModal";
 import OrdersHeader from "@/components/orders/OrdersHeader";
 import { useOrderFilters } from "@/hooks/useOrderFilters";
 import { getEmptyStateStyles } from "@/styles/common.styles";
+import { useOrdersQuery } from "@/hooks/queries/useOrdersQuery";
 
 
 export default function OrdersScreen() {
     const theme = useTheme();
     const emptyStyles = useMemo(() => getEmptyStateStyles(theme), [theme]);
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const {
+        data: orders = [],
+        isLoading,
+        isError,
+        error,
+    } = useOrdersQuery();
     const {
         filtersOpen,
         text,
@@ -43,41 +45,14 @@ export default function OrdersScreen() {
         clearAllFilters,
     } = useOrderFilters(orders);
 
-    useEffect(() => {
-        let isMounted = true;
-
-        const loadOrders = async () => {
-            try {
-                setErrorMessage(null);
-                setIsLoading(true);
-
-                const data = await getOrders();
-                if (!isMounted) return;
-
-                setOrders(data);
-            } catch {
-                if (!isMounted) return;
-                setErrorMessage("No se pudieron cargar los pedidos.");
-            } finally {
-                if (!isMounted) return;
-                setIsLoading(false);
-            }
-        };
-
-        loadOrders();
-
-        return () => {
-            isMounted = false;
-        };
-    }, []);
-
-
     if (isLoading) {
         return <LoadingDataIndicatorApp message="Cargando pedidos..." />;
     }
 
-    if (errorMessage) {
-        return <ErrorMessageApp errorMessage={errorMessage} />;
+    if (isError) {
+        const message =
+            error instanceof Error ? error.message : "No se pudieron cargar los pedidos.";
+        return <ErrorMessageApp errorMessage={message} />;
     }
 
     const showEmpty = filteredOrders.length === 0;
