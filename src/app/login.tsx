@@ -16,7 +16,7 @@ import {
     RegisterFormValues,
 } from "@/schemas/auth.schema";
 import { authScreenStyles } from "@/styles/auth.styles";
-import { login } from "@/services/auth.service";
+import { login, register } from "@/services/auth.service";
 import { useUserStore } from "@/stores/user.store";
 
 export default function AuthScreen() {
@@ -57,10 +57,12 @@ export default function AuthScreen() {
 
     const onSubmitRegister = async (data: RegisterFormValues) => {
         try {
-            console.log("register submit", data);
+            const session = await register(data.email, data.password);
+            setUser(session.user, session.role, session.token);
             router.replace("/(tabs)");
         } catch (e) {
-            Alert.alert("Error", "No se pudo crear la cuenta");
+            const message = e instanceof Error ? e.message : "No se pudo crear la cuenta";
+            Alert.alert("Error", message);
         }
     };
 

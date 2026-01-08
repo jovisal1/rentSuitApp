@@ -5,6 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SnackbarProvider } from "@/providers/SnackBarProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 export default function RootLayout() {
     const [fontsLoaded] = useFonts({
@@ -20,20 +21,22 @@ export default function RootLayout() {
         <SafeAreaProvider>
             <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
                 <AuthProvider>
-                    <ThemeProvider>
-                        <SnackbarProvider>
-                            <Stack screenOptions={{
-                                headerShown: false
-                            }}>
-                                <Stack.Screen
-                                    name="login"
-                                    options={{
-                                        animation: "none",
-                                    }} />
-                                <Stack.Screen name="(protected)" />
-                            </Stack>
-                        </SnackbarProvider>
-                    </ThemeProvider>
+                    <QueryProvider>
+                        <ThemeProvider>
+                            <SnackbarProvider>
+                                <Stack screenOptions={{
+                                    headerShown: false
+                                }}>
+                                    <Stack.Screen
+                                        name="login"
+                                        options={{
+                                            animation: "none",
+                                        }} />
+                                    <Stack.Screen name="(protected)" />
+                                </Stack>
+                            </SnackbarProvider>
+                        </ThemeProvider>
+                    </QueryProvider>
                 </AuthProvider>
             </SafeAreaView>
         </SafeAreaProvider>

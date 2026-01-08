@@ -13,34 +13,24 @@ export type UpdateUserPayload = {
     email: string;
 };
 
-export const login = async (email: string, password: string): Promise<AuthSession> => {
-    const normalizedEmail = email.trim().toLowerCase();
-    const { data, error } = await supabase
-        .from("users")
-        .select("id, role_id, name, email, avatar_url, roles ( id, name, description )")
-        .eq("email", normalizedEmail)
-        .maybeSingle();
+type UserProfileRow = {
+    id: number;
+    role_id: number;
+    name: string;
+    email: string;
+    avatar_url: string | null;
+    roles:
+        | { id: number; name: Role["name"]; description?: string | null }
+        | Array<{ id: number; name: Role["name"]; description?: string | null }>;
+};
 
-    if (error || !data) {
-        throw new Error("Usuario o contraseña incorrectos.");
-    }
-
-    if (!password) {
-        throw new Error("Usuario o contraseña incorrectos.");
-    }
-
+const mapProfile = (data: UserProfileRow) => {
     const roleData = Array.isArray(data.roles) ? data.roles[0] : data.roles;
-    const role = roleData
-        ? {
-            id: roleData.id,
-            name: roleData.name,
-            description: roleData.description ?? undefined,
-        }
-        : null;
-
-    if (!role) {
-        throw new Error("Rol no válido.");
-    }
+    const role: Role = {
+        id: roleData.id,
+        name: roleData.name,
+        description: roleData.description ?? undefined,
+    };
 
     const user: User = {
         id: data.id,
@@ -50,8 +40,78 @@ export const login = async (email: string, password: string): Promise<AuthSessio
         avatarUrl: data.avatar_url ?? undefined,
     };
 
-    const token = `supabase-${data.id}-${Date.now()}`;
-    return { user, role, token };
+    return { user, role };
+};
+
+export const fetchProfileByAuthId = async (authUserId: string) => {
+    const { data, error } = await supabase
+        .from("users")
+        .select("id, role_id, name, email, avatar_url, roles ( id, name, description )")
+        .eq("auth_user_id", authUserId)
+        .single();
+
+    if (error || !data) {
+        throw new Error("No se encontró el perfil del usuario.");
+    }
+
+    return mapProfile(data as UserProfileRow);
+};
+
+export const login = async (email: string, password: string): Promise<AuthSession> => {
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+    });
+
+    if (authError || !authData.session || !authData.user) {
+        throw new Error("Usuario o contraseña incorrectos.");
+    }
+
+    const { user, role } = await fetchProfileByAuthId(authData.user.id);
+
+    return {
+        user,
+        role,
+        token: authData.session.access_token,
+    };
+};
+
+export const register = async (email: string, password: string): Promise<AuthSession> => {
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+    });
+
+    if (authError || !authData.user) {
+        throw new Error("No se pudo crear la cuenta.");
+    }
+
+    const authUserId = authData.user.id;
+    const baseName = email.split("@")[0]?.trim() || "Nuevo usuario";
+
+    const { error: profileError } = await supabase.from("users").insert({
+        auth_user_id: authUserId,
+        role_id: 1,
+        name: baseName,
+        email: email.trim(),
+        avatar_url: null,
+    });
+
+    if (profileError) {
+        throw new Error("No se pudo crear el perfil del usuario.");
+    }
+
+    if (!authData.session) {
+        throw new Error("Revisa tu correo para confirmar la cuenta.");
+    }
+
+    const { user, role } = await fetchProfileByAuthId(authUserId);
+
+    return {
+        user,
+        role,
+        token: authData.session.access_token,
+    };
 };
 
 export const updateUserProfile = async (payload: UpdateUserPayload): Promise<User> => {

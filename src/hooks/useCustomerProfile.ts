@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Customer, emptyCustomer } from "@/types/Customer";
-import { createCustomer, deleteCustomer, getCustomerById } from "@/services/customerService";
+import { createCustomer, deleteCustomer } from "@/services/customerService";
+import { useCustomerQuery } from "@/hooks/queries/useCustomerQuery";
+import { customersQueryKey, customerQueryKey } from "@/hooks/queries/queryKeys";
 
 export function useCustomerProfile() {
     const { customerId } = useLocalSearchParams<{ customerId?: string }>();
@@ -11,46 +14,35 @@ export function useCustomerProfile() {
     const [activeTab, setActiveTab] = useState("Datos de contacto");
     const [isEditing, setIsEditing] = useState(false);
     const [customer, setCustomer] = useState<Customer | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
     const [confirmVisible, setConfirmVisible] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const queryClient = useQueryClient();
+
+    const numericCustomerId = Number(customerId);
+    const canFetchCustomer = !isCreating && Number.isFinite(numericCustomerId);
+    const {
+        data: customerData,
+        isLoading: isCustomerLoading,
+        isError: isCustomerError,
+    } = useCustomerQuery(numericCustomerId, canFetchCustomer);
 
     useEffect(() => {
-        let isMounted = true;
+        if (isCreating) {
+            setActiveTab("Datos de contacto");
+            setCustomer({ ...emptyCustomer });
+            setIsEditing(true);
+            return;
+        }
 
-        const loadCustomer = async () => {
-            setIsLoading(true);
-            if (isCreating) {
-                if (isMounted) {
-                    setActiveTab("Datos de contacto");
-                    setCustomer({ ...emptyCustomer });
-                    setIsEditing(true);
-                    setIsLoading(false);
-                }
-                return;
-            }
-            const id = Number(customerId);
-            if (!Number.isFinite(id)) {
-                if (isMounted) {
-                    setCustomer(null);
-                    setIsLoading(false);
-                }
-                return;
-            }
+        if (isCustomerError) {
+            setCustomer(null);
+            return;
+        }
 
-            const data = await getCustomerById(id);
-            if (isMounted) {
-                setCustomer(data ?? null);
-                setIsLoading(false);
-            }
-        };
-
-        loadCustomer();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [customerId, isCreating]);
+        if (customerData && !isEditing) {
+            setCustomer(customerData);
+        }
+    }, [customerData, isCreating, isCustomerError, isEditing]);
 
     const handleDeleteCustomer = async () => {
         if (!customer) return;
@@ -60,6 +52,7 @@ export function useCustomerProfile() {
             setConfirmVisible(false);
 
             await deleteCustomer(customer.id);
+            await queryClient.invalidateQueries({ queryKey: customersQueryKey });
 
             // Volver al listado
             router.back();
@@ -70,6 +63,8 @@ export function useCustomerProfile() {
 
     const handleCreateCustomer = async (draft: Customer) => {
         const created = await createCustomer(draft);
+        await queryClient.invalidateQueries({ queryKey: customersQueryKey });
+        await queryClient.invalidateQueries({ queryKey: customerQueryKey(created.id) });
         router.replace({
             pathname: "/customers/[customerId]",
             params: { customerId: created.id },
@@ -88,7 +83,7 @@ export function useCustomerProfile() {
         setIsEditing,
         customer,
         setCustomer,
-        isLoading,
+        isLoading: isCreating ? false : isCustomerLoading,
         confirmVisible,
         setConfirmVisible,
         isDeleting,

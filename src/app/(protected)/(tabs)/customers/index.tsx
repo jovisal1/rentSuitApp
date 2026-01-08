@@ -4,11 +4,12 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { FAB, Portal, useTheme } from "react-native-paper";
 import { router } from "expo-router";
 import CustomerCardApp from "@/components/customers/CustomerCardApp";
-import { getCustomers } from "@/services/customerService";
-import { Customer } from "@/types/Customer";
 import { SearchInputApp } from "@/components/SearchInputApp";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useCustomersQuery } from "@/hooks/queries/useCustomersQuery";
+import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
+import ErrorMessageApp from "@/components/ErrorMessageApp";
 
 
 export default function CustomersScreen() {
@@ -17,23 +18,18 @@ export default function CustomersScreen() {
     const { bottom } = useSafeAreaInsets();
     const isFocused = useIsFocused();
     const [search, setSearch] = useState("");
-    const [customers, setCustomers] = useState<Customer[]>([]);
+    const {
+        data: customers = [],
+        isLoading,
+        isError,
+        error,
+        refetch,
+    } = useCustomersQuery();
 
     useFocusEffect(
         useCallback(() => {
-            let isActive = true;
-            const loadCustomers = async () => {
-                const data = await getCustomers();
-                if (isActive) {
-                    setCustomers([...data]);
-                }
-            };
-
-            loadCustomers();
-            return () => {
-                isActive = false;
-            };
-        }, [])
+            refetch();
+        }, [refetch])
     );
 
     const filtered = useMemo(() => {
@@ -46,6 +42,16 @@ export default function CustomersScreen() {
                 (c.phone?.toLowerCase().includes(term) ?? false)
         );
     }, [customers, search]);
+
+    if (isLoading) {
+        return <LoadingDataIndicatorApp message="Cargando clientes..." />;
+    }
+
+    if (isError) {
+        const message =
+            error instanceof Error ? error.message : "No se pudieron cargar los clientes.";
+        return <ErrorMessageApp errorMessage={message} />;
+    }
 
     return (
 
