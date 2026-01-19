@@ -1,19 +1,18 @@
-import React, { useMemo, useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Text, FAB, Portal } from "react-native-paper";
+import React, { useMemo } from "react";
+import { View, Platform } from "react-native";
+import { Text, Portal } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 
 import { EditableFieldApp } from "@/components/EditableFieldApp";
 import { TextInputApp } from "@/components/TextInputApp";
+import { FloatingFabApp } from "@/components/FloatingFabApp";
 import { themeApp } from "@/theme";
 import { Customer } from "@/types/Customer";
-import { customerSchema } from "@/schemas/customer.schema";
-import { useAppSnackbar } from "@/providers/SnackBarProvider";
-import { FieldErrors, zodIssuesToFieldErrors } from "@/schemas/utils";
-import { updateCustomer } from "@/services/customerService";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { getCustomerContactInfoStyles } from "@/styles/customerContactInfo.styles";
+import { useCustomerContactInfo } from "@/hooks/useCustomerContactInfo";
 
 
 
@@ -39,69 +38,19 @@ export function CustomerContactInfo({
     successMessage,
     errorMessage,
 }: CustomerContactInfoProps) {
-    const [tempCustomer, setTempCustomer] = useState<Customer>({ ...customer });
-    const [errors, setErrors] = useState<FieldErrors>({});
-    const [isSaving, setIsSaving] = useState(false);
+    const styles = useMemo(() => getCustomerContactInfoStyles(), []);
     const isFocused = useIsFocused();
-    const { show } = useAppSnackbar();
-    const hasErrors = useMemo(() => Object.keys(errors).length > 0, [errors]);
-    const tabBarHeight = useBottomTabBarHeight();
-    const { bottom } = useSafeAreaInsets();
-
-    const fabBottom = tabBarHeight + bottom;
-    const smallFabOffset = 56;
-
-    const clearError = (path: string) => {
-        setErrors((prev) => {
-            if (!prev[path]) return prev;
-            const next = { ...prev };
-            delete next[path];
-            return next;
+    const { errors, isSaving, hasErrors, clearError, handleEdit, handleCancel, handleSave } =
+        useCustomerContactInfo({
+            customer,
+            setCustomer,
+            setIsEditing,
+            onSave,
+            onCancel,
+            successMessage,
+            errorMessage,
         });
-    };
 
-    const handleEdit = () => {
-        setTempCustomer(JSON.parse(JSON.stringify(customer)));
-        setErrors({});
-        setIsEditing(true);
-    };
-
-    const handleCancel = () => {
-        if (isSaving) return;
-        if (onCancel) {
-            onCancel();
-            return;
-        }
-        setCustomer(tempCustomer);
-        setErrors({});
-        setIsEditing(false);
-    };
-
-    const handleSave = async () => {
-        if (isSaving) return;
-        const result = customerSchema.safeParse(customer);
-        if (!result.success) {
-            setErrors(zodIssuesToFieldErrors(result.error.issues));
-            show({ message: "Revisa los campos marcados." });
-            return;
-        }
-        try {
-            setIsSaving(true);
-            const savedCustomer = onSave
-                ? await onSave(customer)
-                : await updateCustomer(customer);
-            if (!savedCustomer) {
-                show({ message: errorMessage ?? "No se pudo guardar el cliente." });
-                return;
-            }
-            setCustomer(savedCustomer);
-            setErrors({});
-            setIsEditing(false);
-            show({ message: successMessage ?? "Cambios guardados.", duration: 2000 });
-        } finally {
-            setIsSaving(false);
-        }
-    };
 
     return (
         <View style={styles.container}>
@@ -242,23 +191,17 @@ export function CustomerContactInfo({
             {isFocused && (
                 <Portal>
                     {isEditing && (
-                        <FAB
+                        <FloatingFabApp
                             icon="close"
-                            style={[styles.fabSmall, { bottom: fabBottom + smallFabOffset }]}
-                            color={themeApp.colors.primary}
                             onPress={handleCancel}
                             size="small"
                             disabled={isSaving}
+                            style={{ elevation: 0, marginBottom: 10 }}
                         />
                     )}
 
-                    <FAB
+                    <FloatingFabApp
                         icon={isEditing ? "check" : "pencil"}
-                        style={[
-                            styles.fabMain,
-                            { bottom: fabBottom, backgroundColor: themeApp.colors.primary },
-                        ]}
-                        color="white"
                         onPress={isEditing ? handleSave : handleEdit}
                         size="medium"
                         disabled={isSaving}
@@ -271,56 +214,3 @@ export function CustomerContactInfo({
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FFF",
-        borderRadius: 12,
-        paddingHorizontal: 12,
-        borderWidth: 1,
-        borderColor: "#F0F0F0",
-        paddingBottom: 10,
-    },
-    sectionHeader: { marginTop: 12, marginBottom: 4, paddingLeft: 2 },
-    sectionTitle: {
-        fontSize: 10,
-        fontWeight: "800",
-        color: "#06305f",
-        textTransform: "uppercase",
-        opacity: 0.5,
-    },
-    notesContainer: { marginTop: 12 },
-    notesHeader: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
-    labelTitleNotes: {
-        fontSize: 10,
-        color: "#A0A0A0",
-        textTransform: "uppercase",
-        letterSpacing: 0.3,
-        marginLeft: 8,
-    },
-    valueTextNotes: { fontSize: 14, color: "#555", lineHeight: 20, paddingLeft: 4 },
-    textArea: {
-        height: 100,
-        backgroundColor: "#FFF",
-        fontSize: 14,
-        textAlignVertical: "top",
-        marginTop: 4,
-    },
-    fabMain: {
-        position: "absolute",
-        right: 20,
-        alignItems: "center",
-        borderRadius: 30,
-        elevation: 3,
-    },
-    fabSmall: {
-        position: "absolute",
-        right: 30,
-        alignItems: "center",
-        backgroundColor: "#F0F1F5",
-        marginBottom: 10,
-        borderRadius: 30,
-        elevation: 0,
-    },
-});

@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { FlatList, StyleSheet, View } from "react-native";
-import { FAB, Portal, useTheme } from "react-native-paper";
+import { FlatList, Platform, StyleSheet, View } from "react-native";
+import { Portal, useTheme } from "react-native-paper";
 import { router } from "expo-router";
 import CustomerCardApp from "@/components/customers/CustomerCardApp";
 import { SearchInputApp } from "@/components/SearchInputApp";
@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomersQuery } from "@/hooks/queries/useCustomersQuery";
 import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
 import ErrorMessageApp from "@/components/ErrorMessageApp";
+import { FloatingFabApp } from "@/components/FloatingFabApp";
 
 
 export default function CustomersScreen() {
@@ -17,6 +18,7 @@ export default function CustomersScreen() {
     const tabBarHeight = useBottomTabBarHeight();
     const { bottom } = useSafeAreaInsets();
     const isFocused = useIsFocused();
+    const webFabOffset = Platform.OS === "web" ? 12 : 0;
     const [search, setSearch] = useState("");
     const {
         data: customers = [],
@@ -79,16 +81,8 @@ export default function CustomersScreen() {
             />
             {isFocused && (
                 <Portal>
-                    <FAB
+                    <FloatingFabApp
                         icon="plus"
-                        style={[
-                            styles.fab,
-                            {
-                                backgroundColor: theme.colors.primary,
-                                bottom: tabBarHeight + bottom,
-                            },
-                        ]}
-                        color="white"
                         onPress={() => router.push("/customers/new")}
                         accessibilityLabel="Crear cliente"
                     />
@@ -119,11 +113,5 @@ const styles = StyleSheet.create({
         gap: 10,
         alignItems: "center",
         justifyContent: "center"
-    },
-    fab: {
-        position: "absolute",
-        right: 20,
-        borderRadius: 30,
-        elevation: 3,
     },
 });

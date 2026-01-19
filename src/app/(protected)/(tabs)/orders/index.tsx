@@ -5,9 +5,15 @@ import {
     Pressable,
     StyleSheet,
     FlatList,
+    Platform,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "react-native-paper";
+import { Portal, useTheme } from "react-native-paper";
+import { useIsFocused } from "@react-navigation/native";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { FloatingFabApp } from "@/components/FloatingFabApp";
 
 import OrderRow from "@/components/orders/OrderRow";
 import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
@@ -23,6 +29,10 @@ import { useCustomersQuery } from "@/hooks/queries/useCustomersQuery";
 export default function OrdersScreen() {
     const theme = useTheme();
     const emptyStyles = useMemo(() => getEmptyStateStyles(theme), [theme]);
+    const isFocused = useIsFocused();
+    const tabBarHeight = useBottomTabBarHeight();
+    const { bottom } = useSafeAreaInsets();
+    const webFabOffset = Platform.OS === "web" ? 12 : 0;
     const {
         data: orders = [],
         isLoading,
@@ -135,6 +145,16 @@ export default function OrdersScreen() {
                 onClear={clearAdvancedFilters}
                 onApply={() => setFiltersOpen(false)}
             />
+
+            {isFocused && (
+                <Portal>
+                    <FloatingFabApp
+                        icon="plus"
+                        onPress={() => router.push("/orders/new")}
+                        accessibilityLabel="Crear pedido"
+                    />
+                </Portal>
+            )}
         </View>
     );
 }
