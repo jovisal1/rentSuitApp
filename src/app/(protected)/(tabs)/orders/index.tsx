@@ -17,6 +17,7 @@ import OrdersHeader from "@/components/orders/OrdersHeader";
 import { useOrderFilters } from "@/hooks/useOrderFilters";
 import { getEmptyStateStyles } from "@/styles/common.styles";
 import { useOrdersQuery } from "@/hooks/queries/useOrdersQuery";
+import { useCustomersQuery } from "@/hooks/queries/useCustomersQuery";
 
 
 export default function OrdersScreen() {
@@ -28,6 +29,12 @@ export default function OrdersScreen() {
         isError,
         error,
     } = useOrdersQuery();
+    const { data: customers = [] } = useCustomersQuery();
+    const customerNameById = useMemo(() => {
+        const map = new Map<number, string>();
+        customers.forEach((customer) => map.set(customer.id, customer.name));
+        return map;
+    }, [customers]);
     const {
         filtersOpen,
         text,
@@ -100,7 +107,12 @@ export default function OrdersScreen() {
                 <FlatList
                     data={filteredOrders}
                     keyExtractor={(item) => String(item.id)}
-                    renderItem={({ item }) => <OrderRow order={item} />}
+                    renderItem={({ item }) => (
+                        <OrderRow
+                            order={item}
+                            customerName={customerNameById.get(item.customerId)}
+                        />
+                    )}
                     contentContainerStyle={[
                         styles.listContent,
                         { backgroundColor: theme.colors.background },

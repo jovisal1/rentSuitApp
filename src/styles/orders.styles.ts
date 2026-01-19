@@ -8,7 +8,9 @@ export const getOrderRowStyles = (theme: MD3Theme) =>
             marginHorizontal: 16,
             marginVertical: 8,
             padding: 16,
-            borderRadius: 5,
+            borderRadius: 14,
+            borderWidth: 1,
+            borderColor: theme.colors.outlineVariant,
             shadowColor: theme.colors.shadow,
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.05,
@@ -19,43 +21,63 @@ export const getOrderRowStyles = (theme: MD3Theme) =>
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-start",
-            marginBottom: 12,
+            gap: 12,
         },
-        codeContainer: {
-            gap: 2,
-        },
+        headerLeft: { flex: 1 },
         codeLabel: {
             fontSize: 10,
             fontWeight: "600",
             color: theme.colors.onSurfaceVariant,
             letterSpacing: 0.5,
         },
+        codeRow: {
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 4,
+        },
         codeValue: {
-            fontSize: 16,
-            fontWeight: "700",
+            fontSize: 18,
+            fontWeight: "800",
             color: theme.colors.onSurface,
         },
         statusBadge: {
             paddingHorizontal: 10,
             paddingVertical: 4,
-            borderRadius: 8,
+            borderRadius: 999,
         },
         statusText: {
             fontSize: 11,
             fontWeight: "800",
+        },
+        customerName: {
+            marginTop: 6,
+            fontSize: 13,
+            fontWeight: "500",
+            color: theme.colors.onSurfaceVariant,
+        },
+        actions: {
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 12,
+            paddingTop: 4,
         },
         divider: {
             height: 1,
             backgroundColor: theme.colors.outlineVariant,
             marginVertical: 12,
         },
-        footer: {
+        datesRow: {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            marginTop: 12,
         },
         dateGroup: {
             flex: 1,
+        },
+        dateGroupEnd: {
+            alignItems: "flex-end",
         },
         dateLabel: {
             fontSize: 10,
@@ -68,10 +90,24 @@ export const getOrderRowStyles = (theme: MD3Theme) =>
             fontWeight: "600",
             color: theme.colors.onSurface,
         },
-        arrow: {
-            paddingHorizontal: 15,
-            color: theme.colors.outlineVariant,
-            fontSize: 18,
+        summaryRow: {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+        },
+        summaryText: {
+            fontSize: 13,
+            color: theme.colors.onSurfaceVariant,
+            fontWeight: "500",
+        },
+        amountText: {
+            fontSize: 16,
+            fontWeight: "800",
+            color: theme.colors.onSurface,
+        },
+        noteText: {
+            fontSize: 12,
+            color: theme.colors.onSurfaceVariant,
         },
     });
 

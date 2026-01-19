@@ -158,7 +158,7 @@ export default function CustomerProfileScreen() {
                         errorMessage={isCreating ? "No se pudo crear el cliente." : undefined}
                     />
                 ) : !isCreating ? (
-                    <CustomerOrders customerId={customer.id} />
+                    <CustomerOrders customerId={customer.id} customerName={customer.name} />
                 ) : null}
             </ScrollView>
 

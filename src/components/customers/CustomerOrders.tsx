@@ -10,9 +10,10 @@ import { useOrdersByCustomerQuery } from "@/hooks/queries/useOrdersByCustomerQue
 
 type CustomerOrdersProps = {
     customerId: number;
+    customerName?: string;
 };
 
-export function CustomerOrders({ customerId }: CustomerOrdersProps) {
+export function CustomerOrders({ customerId, customerName }: CustomerOrdersProps) {
     const theme = useTheme();
     const emptyStyles = useMemo(() => getCompactEmptyStateStyles(theme), [theme]);
     const {
@@ -48,7 +49,7 @@ export function CustomerOrders({ customerId }: CustomerOrdersProps) {
     return (
         <View style={styles.list}>
             {orders.map((order) => (
-                <OrderRow key={order.id} order={order} />
+                <OrderRow key={order.id} order={order} customerName={customerName} />
             ))}
         </View>
     );
