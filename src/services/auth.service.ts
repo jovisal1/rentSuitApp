@@ -1,5 +1,6 @@
+import { File } from "expo-file-system";
 import type { Role, User } from "@/types/User";
-import { supabase } from "@/services/supabaseClient";
+import { supabase } from "@/config/supabaseClient";
 
 export type AuthSession = {
     user: User;
@@ -12,6 +13,8 @@ export type UpdateUserPayload = {
     name: string;
     email: string;
 };
+
+const AVATAR_BUCKET = "avatars";
 
 type UserProfileRow = {
     id: number;
@@ -32,15 +35,16 @@ const mapProfile = (data: UserProfileRow) => {
         description: roleData.description ?? undefined,
     };
 
-    const user: User = {
-        id: data.id,
-        roleId: data.role_id,
-        name: data.name,
-        email: data.email,
-        avatarUrl: data.avatar_url ?? undefined,
+    return {
+        user: {
+            id: data.id,
+            roleId: data.role_id,
+            name: data.name,
+            email: data.email,
+            avatarUrl: data.avatar_url ?? undefined,
+        },
+        role,
     };
-
-    return { user, role };
 };
 
 export const fetchProfileByAuthId = async (authUserId: string) => {
@@ -127,6 +131,55 @@ export const updateUserProfile = async (payload: UpdateUserPayload): Promise<Use
 
     if (error || !data) {
         throw new Error("Usuario no encontrado.");
+    }
+
+    return {
+        id: data.id,
+        roleId: data.role_id,
+        name: data.name,
+        email: data.email,
+        avatarUrl: data.avatar_url ?? undefined,
+    };
+};
+
+export const uploadUserAvatar = async ({
+    userId,
+    fileUri,
+    mimeType,
+}: {
+    userId: number;
+    fileUri: string;
+    mimeType?: string | null;
+}): Promise<User> => {
+    const extension = mimeType?.split("/")[1] ?? "jpg";
+    const filePath = `user-${userId}.${extension}`;
+    const file = new File(fileUri);
+    const fileData = await file.arrayBuffer();
+
+    const { error: uploadError } = await supabase.storage
+        .from(AVATAR_BUCKET)
+        .upload(filePath, fileData, {
+            upsert: true,
+            contentType: mimeType ?? undefined,
+        });
+
+    if (uploadError) {
+        throw new Error("No se pudo subir la imagen.");
+    }
+
+    const { data: publicData } = supabase.storage
+        .from(AVATAR_BUCKET)
+        .getPublicUrl(filePath);
+
+    const { data, error } = await supabase
+        .from("users")
+        .update({ avatar_url: publicData.publicUrl })
+        .eq("id", userId)
+        .select("id, role_id, name, email, avatar_url")
+        .single();
+
+    if (error || !data) {
+        throw new Error("No se pudo guardar el avatar.");
     }
 
     return {

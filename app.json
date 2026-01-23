@@ -2,10 +2,11 @@
   "expo": {
     "name": "rentSuitApp",
     "slug": "rentSuitApp",
-    "scheme": "rentSuitApp",
+    "scheme": "rent-suit-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "jsEngine": "hermes",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -31,7 +32,13 @@
       "expo-router",
       "expo-font",
       "@react-native-community/datetimepicker",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
     ]
   }
 }
