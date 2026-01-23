@@ -1,5 +1,5 @@
 import { Customer, CustomerAddress } from "@/types/Customer";
-import { supabase } from "@/services/supabaseClient";
+import { supabase } from "@/config/supabaseClient";
 
 type CustomerRow = {
     id: number;

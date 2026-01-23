@@ -210,4 +210,24 @@ on public.order_status_history
 for delete
 using (auth.role() = 'authenticated');
 
+
+create policy "avatars insert"
+on storage.objects
+for insert
+to authenticated
+with check (bucket_id = 'avatars');
+
+create policy "avatars update"
+on storage.objects
+for update
+to authenticated
+using (bucket_id = 'avatars');
+
+create policy "avatars select"
+on storage.objects
+for select
+to authenticated
+using (bucket_id = 'avatars');
+
+
 commit;

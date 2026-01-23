@@ -3,7 +3,7 @@ import { Pressable, View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 import { Order } from "@/types/Order";
-import { formatDateForDisplay } from "@/services/utils";
+import { formatDateForDisplay } from "@/utils/dateUtils";
 import { getOrderRowStyles } from "@/styles/orders.styles";
 
 type OrderRowProps = {
@@ -35,9 +35,9 @@ export default function OrderRow({
     const statusMeta = statusMap[order.status];
     const statusColor = statusMeta?.color ?? "#FF9800";
     const statusLabel = statusMeta?.label ?? order.status;
-    const unitsText = Number.isFinite(totalUnits) ? String(totalUnits) : "—";
-    const productsText = Number.isFinite(totalProducts) ? String(totalProducts) : "—";
-    const amountText = Number.isFinite(totalAmount) ? `${formatAmount(totalAmount)}€` : "—";
+    const unitsText = typeof totalUnits === "number" ? String(totalUnits) : "—";
+    const productsText = typeof totalProducts === "number" ? String(totalProducts) : "—";
+    const amountText = typeof totalAmount === "number" ? `${formatAmount(totalAmount)}€` : "—";
 
     return (
         <Pressable style={styles.row}>

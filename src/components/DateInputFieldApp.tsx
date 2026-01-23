@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Platform, Pressable, Text, TextInput, View, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useTheme } from "react-native-paper";
-import { formatDateForDisplay, toDate } from "@/services/utils";
+import { formatDateForDisplay, toDate } from "@/utils/dateUtils";
 
 
 type DateFieldProps = {

@@ -1,7 +1,7 @@
 import { SplashScreen, useRouter, useSegments } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { useUserStore } from "@/stores/user.store";
-import { supabase } from "@/services/supabaseClient";
+import { supabase } from "@/config/supabaseClient";
 import { fetchProfileByAuthId } from "@/services/auth.service";
 
 SplashScreen.preventAutoHideAsync();
@@ -29,7 +29,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const setUser = useUserStore.use.setUser();
     const clearUser = useUserStore.use.clearUser();
     const isLoggedIn = useMemo(() => Boolean(user && token), [user, token]);
-
     const [isHydrated, setIsHydrated] = useState(
         typeof useUserStore.persist?.hasHydrated === "function"
             ? useUserStore.persist.hasHydrated()
@@ -55,6 +54,26 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (!isHydrated) return;
         let isMounted = true;
 
+        const syncProfile = async (session: { user: { id?: string }; access_token: string }) => {
+            if (!session.user?.id) {
+                clearUser();
+                return false;
+            }
+            if (user && role && token) {
+                return true;
+            }
+            try {
+                const profile = await fetchProfileByAuthId(session.user.id);
+                if (!isMounted) return false;
+                setUser(profile.user, profile.role, session.access_token);
+                return true;
+            } catch {
+                clearUser();
+                await supabase.auth.signOut();
+                return false;
+            }
+        };
+
         const loadSession = async () => {
             const { data, error } = await supabase.auth.getSession();
             if (!isMounted) return;
@@ -65,16 +84,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 return;
             }
 
-            if (!user || !role || !token) {
-                try {
-                    const profile = await fetchProfileByAuthId(data.session.user.id);
-                    if (!isMounted) return;
-                    setUser(profile.user, profile.role, data.session.access_token);
-                } catch {
-                    clearUser();
-                    await supabase.auth.signOut();
-                }
-            }
+            await syncProfile(data.session);
 
             if (isMounted) {
                 setIsAuthReady(true);
@@ -84,15 +94,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
         loadSession();
 
         const { data: authListener } = supabase.auth.onAuthStateChange(
-            async (_event, session) => {
-                if (!session) {
+            async (event, session) => {
+                if (event === "SIGNED_OUT" || !session) {
                     clearUser();
                     return;
                 }
-                if (!user || !role || !token) {
-                    const profile = await fetchProfileByAuthId(session.user.id);
-                    setUser(profile.user, profile.role, session.access_token);
-                }
+                await syncProfile(session);
             }
         );
 
@@ -128,7 +135,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
         clearUser();
         await useUserStore.persist.clearStorage();
         await supabase.auth.signOut();
-        router.replace("/login");
     };
 
     return (

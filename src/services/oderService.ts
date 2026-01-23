@@ -1,5 +1,5 @@
 import { Order } from "@/types/Order";
-import { supabase } from "@/services/supabaseClient";
+import { supabase } from "@/config/supabaseClient";
 
 type OrderRow = {
     id: number;

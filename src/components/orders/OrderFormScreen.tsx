@@ -283,7 +283,6 @@ export function OrderFormScreen({ mode }: OrderFormScreenProps) {
             </ScrollView>
 
             <Portal>
-
                 <FloatingFabApp
                     icon="close"
                     onPress={() => {
@@ -292,8 +291,6 @@ export function OrderFormScreen({ mode }: OrderFormScreenProps) {
                     size="small"
                     style={{ elevation: 0, marginBottom: 10 }}
                 />
-
-
                 <FloatingFabApp
                     icon={"check"}
                     onPress={() => {

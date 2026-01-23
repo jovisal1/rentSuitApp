@@ -8,7 +8,6 @@ export default function RootLayout() {
             header: (props) => <HeaderApp {...props} />,
         }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="new" options={{ headerShown: false }} />
             <Stack.Screen name="[orderId]" options={{ headerShown: false }} />
         </Stack>
     );
