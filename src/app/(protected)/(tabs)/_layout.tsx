@@ -26,6 +26,7 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="orders"
                 options={{
+                    href: null,
                     title: "Pedidos",
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="package-variant" color={color} size={size} />
