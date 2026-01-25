@@ -15,11 +15,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { FloatingFabApp } from "@/components/FloatingFabApp";
 
-import OrderRow from "@/components/orders/OrderRow";
+import OrderRow from "@/components/orders/OrderRow/OrderRow";
 import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
 import ErrorMessageApp from "@/components/ErrorMessageApp";
-import OrdersFiltersModal from "@/components/orders/OrdersFiltersModal";
-import OrdersHeader from "@/components/orders/OrdersHeader";
+import OrdersFiltersModal from "@/components/orders/OrdersFiltersModal/OrdersFiltersModal";
+import OrdersHeader from "@/components/orders/OrdersHeader/OrdersHeader";
 import { useOrderFilters } from "@/hooks/useOrderFilters";
 import { getEmptyStateStyles } from "@/styles/common.styles";
 import { useOrdersQuery } from "@/hooks/queries/useOrdersQuery";

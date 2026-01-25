@@ -3,7 +3,7 @@ import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { FlatList, Platform, StyleSheet, View } from "react-native";
 import { Portal, useTheme } from "react-native-paper";
 import { router } from "expo-router";
-import CustomerCardApp from "@/components/customers/CustomerCardApp";
+import CustomerCardApp from "@/components/customers/CustomerCardApp/CustomerCardApp";
 import { SearchInputApp } from "@/components/SearchInputApp";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,10 +15,7 @@ import { FloatingFabApp } from "@/components/FloatingFabApp";
 
 export default function CustomersScreen() {
     const theme = useTheme();
-    const tabBarHeight = useBottomTabBarHeight();
-    const { bottom } = useSafeAreaInsets();
     const isFocused = useIsFocused();
-    const webFabOffset = Platform.OS === "web" ? 12 : 0;
     const [search, setSearch] = useState("");
     const {
         data: customers = [],

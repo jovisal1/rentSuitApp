@@ -3,7 +3,8 @@ import { Image, View } from "react-native";
 import { Icon, Text, useTheme } from "react-native-paper";
 import { Customer } from "@/types/Customer";
 import { Link } from "expo-router";
-import { getCustomerCardStyles } from "@/styles/customers.styles";
+import { getCustomerCardStyles } from "./customerCardApp.styles";
+
 
 interface CustomerCardAppProps {
     customer: Customer;

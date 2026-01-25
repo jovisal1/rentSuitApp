@@ -11,7 +11,7 @@ import { themeApp } from "@/theme";
 import { Customer } from "@/types/Customer";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getCustomerContactInfoStyles } from "@/styles/customerContactInfo.styles";
+import { getCustomerContactInfoStyles } from "@/components/customers/CustomerContactInfo/customerContactInfo.styles";
 import { useCustomerContactInfo } from "@/hooks/useCustomerContactInfo";
 
 
