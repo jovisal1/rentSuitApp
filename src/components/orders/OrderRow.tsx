@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 import { Order } from "@/types/Order";
 import { formatDateForDisplay } from "@/utils/dateUtils";
+import { ORDER_STATUS_META } from "@/utils/constants";
 import { getOrderRowStyles } from "@/styles/orders.styles";
 
 type OrderRowProps = {
@@ -25,14 +26,7 @@ export default function OrderRow({
 }: OrderRowProps) {
     const theme = useTheme();
     const styles = useMemo(() => getOrderRowStyles(theme), [theme]);
-    const statusMap: Record<Order["status"], { color: string; label: string }> = {
-        PREPARADO: { color: "#2196F3", label: "Preparado" },
-        ENTREGADO: { color: "#4CAF50", label: "Entregado" },
-        DEVUELTO: { color: "#9C27B0", label: "Devuelto" },
-        PENDIENTE_REVISION: { color: "#FF9800", label: "Pendiente revision" },
-        FINALIZADO: { color: "#607D8B", label: "Finalizado" },
-    };
-    const statusMeta = statusMap[order.status];
+    const statusMeta = ORDER_STATUS_META[order.status];
     const statusColor = statusMeta?.color ?? "#FF9800";
     const statusLabel = statusMeta?.label ?? order.status;
     const unitsText = typeof totalUnits === "number" ? String(totalUnits) : "—";

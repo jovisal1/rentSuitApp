@@ -1,11 +1,12 @@
 import { PropsWithChildren, useEffect } from "react";
 import { AppState, Platform } from "react-native";
 import { focusManager, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QUERY_STALE_TIME_MS } from "@/utils/constants";
 
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: 30_000,
+            staleTime: QUERY_STALE_TIME_MS,
         },
     },
 });

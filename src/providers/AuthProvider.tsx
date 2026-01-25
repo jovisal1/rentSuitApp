@@ -2,7 +2,7 @@ import { SplashScreen, useRouter, useSegments } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { useUserStore } from "@/stores/user.store";
 import { supabase } from "@/config/supabaseClient";
-import { fetchProfileByAuthId } from "@/services/auth.service";
+import { fetchProfileByAuthId } from "@/services/profile.service";
 
 SplashScreen.preventAutoHideAsync();
 

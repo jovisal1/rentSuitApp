@@ -6,11 +6,12 @@ import { SnackbarProvider } from "@/providers/SnackBarProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { APP_FONTS } from "@/utils/constants";
 
 export default function RootLayout() {
     const [fontsLoaded] = useFonts({
-        'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
-        'Poppins-Bold': require('../../assets/fonts/Poppins-Bold.ttf'),
+        [APP_FONTS.regular]: require("../../assets/fonts/Poppins-Regular.ttf"),
+        [APP_FONTS.bold]: require("../../assets/fonts/Poppins-Bold.ttf"),
     });
 
     if (!fontsLoaded) {
