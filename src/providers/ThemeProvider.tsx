@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 
 import { darkThemeColors, lightThemeColors } from "@/theme";
+import { APP_FONTS } from "@/utils/constants";
 
 type ThemeContextValue = {
     isDark: boolean;
@@ -17,14 +18,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             return {
                 ...MD3DarkTheme,
                 colors: { ...MD3DarkTheme.colors, ...darkThemeColors },
-                fontFamily: "Poppins-Regular",
+                fontFamily: APP_FONTS.regular,
             };
         }
 
         return {
             ...MD3LightTheme,
             colors: { ...MD3LightTheme.colors, ...lightThemeColors },
-            fontFamily: "Poppins-Regular",
+            fontFamily: APP_FONTS.regular,
         };
     }, [isDark]);
 

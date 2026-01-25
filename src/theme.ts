@@ -1,5 +1,6 @@
 
 import { MD3LightTheme as DefaultTheme } from "react-native-paper";
+import { APP_FONTS } from "@/utils/constants";
 
 
 
@@ -101,5 +102,5 @@ export const darkThemeColors = {
 export const themeApp = {
     ...DefaultTheme,
     colors: lightThemeColors,
-    fontFamily: 'Poppins-Regular'
+    fontFamily: APP_FONTS.regular,
 };

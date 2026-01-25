@@ -9,7 +9,7 @@ import { TextInputApp } from "@/components/TextInputApp";
 import { ButtonApp } from "@/components/ButtonApp";
 import { UserAvatarApp } from "@/components/UserAvatarApp";
 import { useUserStore } from "@/stores/user.store";
-import { updateUserProfile, uploadUserAvatar } from "@/services/auth.service";
+import { updateUserProfile, uploadUserAvatar } from "@/services/profile.service";
 
 export default function ProfileScreen() {
     const router = useRouter();
