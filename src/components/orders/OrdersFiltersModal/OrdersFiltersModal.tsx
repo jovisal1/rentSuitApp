@@ -3,8 +3,8 @@ import { Modal, Pressable, Text, View } from "react-native";
 import { useTheme } from "react-native-paper";
 
 import { DateInputFieldApp } from "@/components/DateInputFieldApp";
-import type { OrderStatus } from "@/types/Order"; // ajusta la ruta si hace falta
-import { getOrderFiltersModalStyles } from "@/styles/orders.styles";
+import type { OrderStatus } from "@/types/Order";
+import { getOrderFiltersModalStyles } from "./ordersFiltersModal.styles";
 
 type StatusFilter = OrderStatus | "ALL";
 

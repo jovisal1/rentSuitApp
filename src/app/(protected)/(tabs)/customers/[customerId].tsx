@@ -13,12 +13,13 @@ import {
     IconButton,
 } from "react-native-paper";
 
-import { CustomerContactInfo } from "@/components/customers/CustomerContactInfo";
+import { CustomerContactInfo } from "@/components/customers/CustomerContactInfo/CustomerContactInfo";
 import { CustomerOrders } from "@/components/customers/CustomerOrders";
 import { CommonDialogApp } from "@/components/CommonDialogApp";
-import { getCustomerInfoStyles } from "@/styles/customers.styles";
+
 import { getCompactEmptyStateStyles } from "@/styles/common.styles";
 import { useCustomerProfile } from "@/hooks/useCustomerProfile";
+import { getCustomerInfoStyles } from "@/styles/customers.styles";
 
 export default function CustomerProfileScreen() {
     const theme = useTheme();

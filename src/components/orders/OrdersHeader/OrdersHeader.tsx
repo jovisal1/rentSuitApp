@@ -3,7 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 import { SearchInputApp } from "@/components/SearchInputApp";
-import { getOrdersHeaderStyle } from "@/styles/orders.styles";
+import { getOrdersHeaderStyle } from "@/components/orders/OrdersHeader/ordersHeader.styles";
 
 interface OrdersHeaderProps {
     text: string;

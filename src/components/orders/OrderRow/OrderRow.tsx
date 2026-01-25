@@ -5,7 +5,8 @@ import { useTheme } from "react-native-paper";
 import { Order } from "@/types/Order";
 import { formatDateForDisplay } from "@/utils/dateUtils";
 import { ORDER_STATUS_META } from "@/utils/constants";
-import { getOrderRowStyles } from "@/styles/orders.styles";
+import { getOrderRowStyles } from "./orderRow.styles";
+
 
 type OrderRowProps = {
     order: Order;

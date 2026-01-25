@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getCompactEmptyStateStyles } from "@/styles/common.styles";
-import OrderRow from "@/components/orders/OrderRow";
+import OrderRow from "@/components/orders/OrderRow/OrderRow";
 import LoadingDataIndicatorApp from "@/components/LoadingDataIndicatorApp";
 import ErrorMessageApp from "@/components/ErrorMessageApp";
 import { useOrdersByCustomerQuery } from "@/hooks/queries/useOrdersByCustomerQuery";

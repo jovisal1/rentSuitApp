@@ -1,12 +1,15 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Portal, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { TextInputApp } from "@/components/TextInputApp";
 import { FloatingFabApp } from "@/components/FloatingFabApp";
+import { CustomerSelectField } from "@/components/customers/CustomerSelectField/CustomerSelectField";
 import { getOrderFormStyles } from "@/styles/orderForm.styles";
-import { themeApp } from "@/theme";
+import { ORDER_STATUS_META } from "@/utils/constants";
+import { formatDateForDisplay } from "@/utils/dateUtils";
+import { useOrdersQuery } from "@/hooks/queries/useOrdersQuery";
 
 type LineSize = {
     id: string;
@@ -24,39 +27,40 @@ type OrderLineForm = {
 
 type OrderFormScreenProps = {
     mode: "create" | "edit";
+    orderId?: string;
 };
 
-const buildInitialLines = (): OrderLineForm[] => [
-    {
-        id: "line-1",
-        productName: "Traje Clasi",
-        pricePerDay: "45",
-        days: "5",
-        sizes: [
-            { id: "size-1", label: "M", quantity: "1" },
-            { id: "size-2", label: "L", quantity: "1" },
-        ],
-    },
-    {
-        id: "line-2",
-        productName: "Camisa Blu",
-        pricePerDay: "12",
-        days: "5",
-        sizes: [{ id: "size-3", label: "M", quantity: "2" }],
-    },
-];
-
-export function OrderFormScreen({ mode }: OrderFormScreenProps) {
+export function OrderFormScreen({ mode, orderId }: OrderFormScreenProps) {
     const theme = useTheme();
     const styles = useMemo(() => getOrderFormStyles(theme), [theme]);
     const router = useRouter();
-    const customerName = "Ana García López";
-    const status = "PREPARADO";
-    const startDate = "28 de diciembre de 2025";
-    const endDate = "2 de enero de 2026";
-    const [notes, setNotes] = useState("Cliente requiere entrega antes de las 10:00");
-    const [lines, setLines] = useState<OrderLineForm[]>(() => buildInitialLines());
+    const isEditMode = mode === "edit";
+    const orderIdNumber = orderId ? Number(orderId) : undefined;
+    const hasOrderId = Boolean(orderIdNumber && Number.isFinite(orderIdNumber));
+    const { data: orders = [], isLoading: isOrdersLoading } = useOrdersQuery(
+        isEditMode && hasOrderId
+    );
+    const order = useMemo(
+        () =>
+            isEditMode && hasOrderId
+                ? orders.find((item) => item.id === orderIdNumber)
+                : undefined,
+        [hasOrderId, isEditMode, orderIdNumber, orders]
+    );
+    const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
+    const [isCustomerPickerOpen, setIsCustomerPickerOpen] = useState(false);
+    const statusLabel = order ? ORDER_STATUS_META[order.status]?.label ?? order.status : "Seleccionar";
+    const startDate = order?.startDate ? formatDateForDisplay(order.startDate) : "";
+    const endDate = order?.endDate ? formatDateForDisplay(order.endDate) : "";
+    const [notes, setNotes] = useState("");
+    const [lines, setLines] = useState<OrderLineForm[]>([]);
     const title = mode === "edit" ? "Editar Pedido" : "Nuevo Pedido";
+
+    useEffect(() => {
+        if (!isEditMode || !order) return;
+        setSelectedCustomerId(order.customerId ?? null);
+        setNotes(order.notes ?? "");
+    }, [isEditMode, order]);
 
     const handleRemoveLine = (id: string) => {
         setLines((prev) => prev.filter((line) => line.id !== id));
@@ -119,17 +123,16 @@ export function OrderFormScreen({ mode }: OrderFormScreenProps) {
                     </Pressable>
                 </View>
 
-                <View>
-                    <Text style={styles.sectionLabel}>Cliente</Text>
-                    <Pressable style={styles.selectField} onPress={() => { }}>
-                        <Text style={styles.selectText}>{customerName}</Text>
-                        <MaterialCommunityIcons
-                            name="chevron-down"
-                            size={18}
-                            color={theme.colors.onSurfaceVariant}
-                        />
-                    </Pressable>
-                </View>
+                <CustomerSelectField
+                    visible={isCustomerPickerOpen}
+                    isFieldLoading={isOrdersLoading && isEditMode}
+                    selectedCustomerId={selectedCustomerId}
+                    onClose={() => setIsCustomerPickerOpen(false)}
+                    onOpen={() => setIsCustomerPickerOpen(true)}
+                    onSelect={({ id }) => {
+                        setSelectedCustomerId(id);
+                    }}
+                />
 
                 <View style={styles.dateRow}>
                     <View style={styles.dateColumn}>
@@ -140,7 +143,7 @@ export function OrderFormScreen({ mode }: OrderFormScreenProps) {
                                 size={16}
                                 color={theme.colors.onSurfaceVariant}
                             />
-                            <Text style={styles.dateText}>{startDate}</Text>
+                            <Text style={styles.dateText}>{startDate || "Seleccionar"}</Text>
                         </Pressable>
                     </View>
 
@@ -152,7 +155,7 @@ export function OrderFormScreen({ mode }: OrderFormScreenProps) {
                                 size={16}
                                 color={theme.colors.onSurfaceVariant}
                             />
-                            <Text style={styles.dateText}>{endDate}</Text>
+                            <Text style={styles.dateText}>{endDate || "Seleccionar"}</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -160,7 +163,7 @@ export function OrderFormScreen({ mode }: OrderFormScreenProps) {
                 <View>
                     <Text style={styles.sectionLabel}>Estado</Text>
                     <Pressable style={styles.selectField} onPress={() => { }}>
-                        <Text style={styles.selectText}>{status}</Text>
+                        <Text style={styles.selectText}>{statusLabel}</Text>
                         <MaterialCommunityIcons
                             name="chevron-down"
                             size={18}
@@ -281,6 +284,8 @@ export function OrderFormScreen({ mode }: OrderFormScreenProps) {
                     />
                 </View>
             </ScrollView>
+
+
 
             <Portal>
                 <FloatingFabApp
