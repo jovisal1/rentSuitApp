@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "919729307502",
+    "project_id": "rentsuitapp",
+    "storage_bucket": "rentsuitapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919729307502:android:9544f625ca9a8beb0a8b7f",
+        "android_client_info": {
+          "package_name": "com.jovisal1.rentsuitapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8wzZjApOT3Fm4YEMAdkBq8qWLF7hoFKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

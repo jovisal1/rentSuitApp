@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "rentSuitApp",
-    "slug": "rentSuitApp",
+    "slug": "rentsuitapp",
     "scheme": "rent-suit-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.jovisal1.rentsuitapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,7 +43,15 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
-    ]
+      ],
+      "expo-notifications"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "973f2bd3-296a-41f2-b9ea-73d827dfca92"
+      }
+    },
+    "owner": "jovisal1"
   }
 }

@@ -6,7 +6,9 @@ import { SnackbarProvider } from "@/providers/SnackBarProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { NotificationsProvider } from "@/providers/NotificationsProvider";
 import { APP_FONTS } from "@/utils/constants";
+
 
 export default function RootLayout() {
     const [fontsLoaded] = useFonts({
@@ -24,18 +26,20 @@ export default function RootLayout() {
                 <AuthProvider>
                     <QueryProvider>
                         <ThemeProvider>
-                            <SnackbarProvider>
-                                <Stack screenOptions={{
-                                    headerShown: false
-                                }}>
-                                    <Stack.Screen
-                                        name="login"
-                                        options={{
-                                            animation: "none",
-                                        }} />
-                                    <Stack.Screen name="(protected)" />
-                                </Stack>
-                            </SnackbarProvider>
+                            <NotificationsProvider>
+                                <SnackbarProvider>
+                                    <Stack screenOptions={{
+                                        headerShown: false
+                                    }}>
+                                        <Stack.Screen
+                                            name="login"
+                                            options={{
+                                                animation: "none",
+                                            }} />
+                                        <Stack.Screen name="(protected)" />
+                                    </Stack>
+                                </SnackbarProvider>
+                            </NotificationsProvider>
                         </ThemeProvider>
                     </QueryProvider>
                 </AuthProvider>
